@@ -27,18 +27,18 @@ struct DiscoverScreen: View {
     
     // Sample categories with their respective icons
     let categoryItems = [
-        CategoryItem(name: "Food & Drinks", icon: "fork.knife", color: .orange),
-        CategoryItem(name: "Music & Concerts", icon: "music.note", color: .purple),
-        CategoryItem(name: "Nightlife", icon: "moon.stars.fill", color: .indigo),
-        CategoryItem(name: "Community", icon: "person.3.fill", color: .green),
-        CategoryItem(name: "Arts & Culture", icon: "paintpalette.fill", color: .pink),
-        CategoryItem(name: "Markets", icon: "cart.fill", color: .blue),
-        CategoryItem(name: "Sports & Fitness", icon: "figure.run", color: .red),
-        CategoryItem(name: "Comedy", icon: "theatermasks.fill", color: .yellow),
-        CategoryItem(name: "Theater", icon: "ticket.fill", color: .mint),
-        CategoryItem(name: "Family Fun", icon: "heart.fill", color: .cyan),
-        CategoryItem(name: "Workshops", icon: "pencil", color: .brown),
-        CategoryItem(name: "Charity", icon: "hand.raised.fill", color: .teal)
+        CategoryItem(name: "Food & Drinks", icon: "fork.knife", color: Color(hex: "FF6B6B")),
+        CategoryItem(name: "Music & Concerts", icon: "music.note", color: Color(hex: "A8E6CF")),
+        CategoryItem(name: "Nightlife", icon: "moon.stars.fill", color: Color(hex: "FFD93D")),
+        CategoryItem(name: "Community", icon: "person.3.fill", color: Color(hex: "4ECDC4")),
+        CategoryItem(name: "Arts & Culture", icon: "paintpalette.fill", color: Color(hex: "3B4371")),
+        CategoryItem(name: "Markets", icon: "cart.fill", color: Color(hex: "FF6B6B")),
+        CategoryItem(name: "Sports & Fitness", icon: "figure.run", color: Color(hex: "A8E6CF")),
+        CategoryItem(name: "Comedy", icon: "theatermasks.fill", color: Color(hex: "FFD93D")),
+        CategoryItem(name: "Theater", icon: "ticket.fill", color: Color(hex: "4ECDC4")),
+        CategoryItem(name: "Family Fun", icon: "heart.fill", color: Color(hex: "3B4371")),
+        CategoryItem(name: "Workshops", icon: "pencil", color: Color(hex: "FF6B6B")),
+        CategoryItem(name: "Charity", icon: "hand.raised.fill", color: Color(hex: "A8E6CF"))
     ]
     
     var filteredEvents: [Event] {
@@ -48,7 +48,8 @@ struct DiscoverScreen: View {
         return events.filter { event in
             let matchesSearch = searchText.isEmpty || 
                 event.name.localizedCaseInsensitiveContains(searchText) ||
-                event.location.localizedCaseInsensitiveContains(searchText)
+                event.location.name.localizedCaseInsensitiveContains(searchText) ||
+                event.location.area.localizedCaseInsensitiveContains(searchText)
             let matchesCategory = selectedCategories.isEmpty || selectedCategories.contains(event.category)
             return matchesSearch && matchesCategory
         }
@@ -222,8 +223,11 @@ struct DiscoverScreen: View {
             .toolbar {
                 ToolbarItem(placement: .principal) {
                     Text("Discover")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.system(size: 42, weight: .heavy))
                         .foregroundColor(.white)
+                        .shadow(color: Color.white.opacity(0.2), radius: 2, x: 0, y: 1)
+                        .tracking(0.4) // Letter spacing
+                        .padding(.top, 20)
                 }
             }
             .background(Color.black)
@@ -420,7 +424,7 @@ struct RecommendedEventCard: View {
                     .font(.system(size: 14))
                     .foregroundColor(.gray)
                 
-                Text(event.location)
+                Text(event.location.name)
                     .font(.system(size: 14))
                     .foregroundColor(.gray)
             }
