@@ -102,9 +102,64 @@ struct PostEventScreen: View {
     @State private var selectedImageData: Data? = nil
     @State private var showingCategoryPicker = false
     @State private var showLocationResults = false
+    @State private var showError = false
+    @State private var errorMessage = ""
     
     let accentColor = Color.white
     let gradientColors = [Color.black, Color.black]
+    
+    private func validateForm() -> Bool {
+        if eventTitle.isEmpty {
+            errorMessage = "Please enter an event title"
+            showError = true
+            return false
+        }
+        
+        if location.isEmpty {
+            errorMessage = "Please select a location"
+            showError = true
+            return false
+        }
+        
+        if description.isEmpty {
+            errorMessage = "Please add a description"
+            showError = true
+            return false
+        }
+        
+        return true
+    }
+    
+    private func createEvent() {
+        if validateForm() {
+            // Format date and time
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "M/dd '@' h a"
+            let combinedDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: selectedTime),
+                                                   minute: Calendar.current.component(.minute, from: selectedTime),
+                                                   second: 0,
+                                                   of: selectedDate) ?? Date()
+            let formattedDate = dateFormatter.string(from: combinedDate)
+            
+            // Create location object
+            let eventLocation = Location(name: location.components(separatedBy: ",")[0],
+                                      area: "Downtown", // Default for now
+                                      city: "Kalamazoo", // Default for now
+                                      fullAddress: location)
+            
+            // Create new event
+            let newEvent = Event(name: eventTitle,
+                               date: formattedDate,
+                               location: eventLocation,
+                               image: "calendar", // Default icon for now
+                               category: selectedCategory)
+            
+            // Here you would typically save the event to your data store
+            // For now we'll just print and dismiss
+            print("Created new event: \(newEvent)")
+            dismiss()
+        }
+    }
     
     var body: some View {
         NavigationView {
@@ -166,6 +221,11 @@ struct PostEventScreen: View {
                 )
                 .ignoresSafeArea()
             )
+            .alert("Error", isPresented: $showError) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text(errorMessage)
+            }
         }
     }
     
@@ -241,7 +301,7 @@ struct PostEventScreen: View {
                     .foregroundColor(.gray)
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: { dismiss() }) {
+                Button(action: createEvent) {
                     Text("Post")
                         .fontWeight(.bold)
                         .foregroundColor(.black)

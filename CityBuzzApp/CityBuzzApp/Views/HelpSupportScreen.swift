@@ -13,10 +13,6 @@ struct HelpSupportScreen: View {
                 
                 // Common Questions
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Frequently Asked Questions")
-                        .font(.title2)
-                        .fontWeight(.bold)
-                    
                     FAQItem(
                         question: "How do I create an event?",
                         answer: "Tap the + button in the tab bar, fill in your event details, and tap Post to publish your event."
@@ -76,4 +72,4 @@ private struct FAQItem: View {
         .background(Color(UIColor.systemGray6))
         .cornerRadius(10)
     }
-} 
+}

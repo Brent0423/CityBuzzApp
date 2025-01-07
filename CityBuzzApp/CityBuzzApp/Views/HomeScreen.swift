@@ -94,6 +94,9 @@ struct HomeScreen: View {
                             .background(Color(.systemGray6))
                             .cornerRadius(12)
                             .padding(.horizontal)
+                            .onChange(of: selectedDate) { _ in
+                                showDatePicker = false
+                            }
                     }
                     
                     // Featured Section
@@ -209,7 +212,7 @@ struct EventListItem: View {
                 .foregroundColor(.white)
                 .frame(width: 40, height: 40)
                 .background(getIconColor(for: event.category))
-                .cornerRadius(8)
+                .clipShape(Circle())
             
             VStack(alignment: .leading, spacing: 4) {
                 Text(event.name)

@@ -1,12 +1,12 @@
 import SwiftUI
 
 struct NotificationsScreen: View {
-    @State private var pushEnabled = true
-    @State private var emailEnabled = true
-    @State private var eventReminders = true
-    @State private var newEvents = true
-    @State private var communityUpdates = true
-    @State private var specialOffers = false
+    @AppStorage("push_enabled") private var pushEnabled = true
+    @AppStorage("email_enabled") private var emailEnabled = true
+    @AppStorage("event_reminders") private var eventReminders = true
+    @AppStorage("new_events") private var newEvents = true
+    @AppStorage("community_updates") private var communityUpdates = true
+    @AppStorage("special_offers") private var specialOffers = false
     
     var body: some View {
         ScrollView {

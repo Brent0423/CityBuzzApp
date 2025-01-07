@@ -9,109 +9,110 @@ struct SettingsScreen: View {
         NavigationView {
             ZStack {
                 LinearGradient(
-                    gradient: Gradient(colors: [Color.black, Color(hex: "#1A1A1A")]),
+                    gradient: Gradient(colors: [Color.black, Color(hex: "1A1A1A")]),
                     startPoint: .top,
                     endPoint: .bottom
                 ).ignoresSafeArea()
-                List {
-                    Section(header: Text("Account Settings")
-                        .foregroundColor(.gray)
-                        .font(.subheadline)
-                        .textCase(nil)
-                        .padding(.bottom, 8)) {
+                
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Account Settings Section
+                        VStack(alignment: .leading, spacing: 24) {
+                            Text("Account Settings")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                            
                             NavigationLink(destination: AccountScreen()) {
-                                Label("Account", systemImage: "person.circle.fill")
-                                    .foregroundColor(.white)
-                                    .contentTransition(.opacity)
+                                SettingsRow(title: "Account", icon: "person.circle.fill")
                             }
-                            .listRowSeparator(.hidden)
-                            .buttonStyle(HoverButtonStyle())
                             
                             NavigationLink(destination: NotificationsScreen()) {
-                                Label("Notifications", systemImage: "bell.badge.fill")
-                                    .foregroundColor(.white)
-                                    .contentTransition(.opacity)
+                                SettingsRow(title: "Notifications", icon: "bell.badge.fill")
                             }
-                            .listRowSeparator(.hidden)
-                            .buttonStyle(HoverButtonStyle())
                             
                             NavigationLink(destination: PrivacyPolicyScreen()) {
-                                Label("Privacy", systemImage: "lock.shield.fill")
-                                    .foregroundColor(.white)
-                                    .contentTransition(.opacity)
+                                SettingsRow(title: "Privacy", icon: "lock.shield.fill")
                             }
-                            .buttonStyle(HoverButtonStyle())
-                    }
-                    .listRowBackground(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(UIColor.systemGray6).opacity(0.95))
-                    )
-                    .padding(.vertical, 8)
-                    
-                    Section(header: Text("Support")
-                        .foregroundColor(.gray)
-                        .font(.subheadline)
-                        .textCase(nil)
-                        .padding(.bottom, 8)) {
+                        }
+                        .padding()
+                        .background(Color(UIColor.systemGray6).opacity(0.5))
+                        .cornerRadius(16)
+                        
+                        // Support Section
+                        VStack(alignment: .leading, spacing: 24) {
+                            Text("Support")
+                                .font(.headline)
+                                .foregroundColor(.gray)
+                            
                             NavigationLink(destination: HelpSupportScreen()) {
-                                Label("Help & Support", systemImage: "questionmark.circle.fill")
-                                    .foregroundColor(.white)
-                                    .contentTransition(.opacity)
+                                SettingsRow(title: "Help & Support", icon: "questionmark.circle.fill")
                             }
-                            .listRowSeparator(.hidden)
-                            .buttonStyle(HoverButtonStyle())
                             
                             NavigationLink(destination: AboutScreen()) {
-                                Label("About", systemImage: "info.circle.fill")
-                                    .foregroundColor(.white)
-                                    .contentTransition(.opacity)
+                                SettingsRow(title: "About", icon: "info.circle.fill")
                             }
-                            .buttonStyle(HoverButtonStyle())
-                    }
-                    .listRowBackground(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(UIColor.systemGray6).opacity(0.95))
-                    )
-                    .padding(.vertical, 8)
-                    
-                    Section {
-                        Button {
-                            showLogoutAlert = true
-                        } label: {
-                            Label("Log Out", systemImage: "rectangle.portrait.and.arrow.right.fill")
-                                .foregroundColor(Color(red: 0.8, green: 0.2, blue: 0.2))
-                                .contentTransition(.opacity)
                         }
-                        .alert("Log Out", isPresented: $showLogoutAlert) {
-                            Button("Cancel", role: .cancel) { }
-                            Button("Log Out", role: .destructive) {
-                                // Add logout action here
+                        .padding()
+                        .background(Color(UIColor.systemGray6).opacity(0.5))
+                        .cornerRadius(16)
+                        
+                        // Logout Section
+                        VStack(alignment: .leading, spacing: 24) {
+                            Button {
+                                showLogoutAlert = true
+                            } label: {
+                                SettingsRow(
+                                    title: "Log Out",
+                                    icon: "rectangle.portrait.and.arrow.right.fill",
+                                    color: .red
+                                )
                             }
-                        } message: {
-                            Text("Are you sure you want to log out?")
                         }
-                        .buttonStyle(HoverButtonStyle())
+                        .padding()
+                        .background(Color(UIColor.systemGray6).opacity(0.5))
+                        .cornerRadius(16)
                     }
-                    .listRowBackground(
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(Color(UIColor.systemGray6).opacity(0.95))
-                    )
+                    .padding()
                 }
-                .listStyle(InsetGroupedListStyle())
-                .scrollContentBackground(.hidden)
             }
             .navigationTitle("Settings")
             .navigationBarTitleDisplayMode(.large)
+            .alert("Log Out", isPresented: $showLogoutAlert) {
+                Button("Cancel", role: .cancel) { }
+                Button("Log Out", role: .destructive) {
+                    // Add logout action here
+                }
+            } message: {
+                Text("Are you sure you want to log out?")
+            }
         }
         .navigationViewStyle(.stack)
     }
 }
 
-struct HoverButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .scaleEffect(configuration.isPressed ? 0.98 : 1.0)
-            .opacity(configuration.isPressed ? 0.9 : 1.0)
-            .animation(.easeInOut(duration: 0.2), value: configuration.isPressed)
+struct SettingsRow: View {
+    let title: String
+    let icon: String
+    var color: Color = .white
+    
+    var body: some View {
+        HStack {
+            Image(systemName: icon)
+                .foregroundColor(color)
+                .frame(width: 30)
+            
+            Text(title)
+                .foregroundColor(color)
+                .fontWeight(title == "Log Out" ? .bold : .regular)
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .font(.system(size: 14))
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .background(Color(UIColor.systemGray5))
+        .cornerRadius(10)
     }
-} 
+}
