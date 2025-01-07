@@ -11,7 +11,7 @@ struct EventCard: View {
                     .fill(event.category.getCategoryColor())
                     .frame(width: 44, height: 44)
                     .overlay(
-                        Image(systemName: event.image)
+                        Image(systemName: "calendar.circle.fill")
                             .foregroundColor(.white)
                             .font(.system(size: 18))
                     )

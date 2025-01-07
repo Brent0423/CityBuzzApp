@@ -1,6 +1,5 @@
 import SwiftUI
 import MapKit
-import PhotosUI
 
 // MARK: - Form Components
 struct EventInfoHeader: View {
@@ -45,48 +44,6 @@ struct DateTimeSection: View {
     }
 }
 
-struct ImageUploadSection: View {
-    @Binding var selectedImage: PhotosPickerItem?
-    @Binding var selectedImageData: Data?
-    let accentColor: Color
-    
-    var body: some View {
-        PhotosPicker(selection: $selectedImage, matching: .images) {
-            if let selectedImageData,
-               let uiImage = UIImage(data: selectedImageData) {
-                Image(uiImage: uiImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(height: 200)
-                    .frame(maxWidth: .infinity)
-                    .clipShape(RoundedRectangle(cornerRadius: 16))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(.white, lineWidth: 2)
-                    )
-            } else {
-                HStack {
-                    Image(systemName: "photo.fill")
-                        .font(.title2)
-                    Text("Add Event Photo")
-                        .fontWeight(.medium)
-                }
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
-                .frame(height: 120)
-                .background(Color.black.opacity(0.3))
-                .cornerRadius(16)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 16)
-                        .strokeBorder(style: StrokeStyle(dash: [8]))
-                        .foregroundColor(.white.opacity(0.5))
-                        .frame(minWidth: 2)
-                )
-            }
-        }
-    }
-}
-
 // MARK: - Main View
 struct PostEventScreen: View {
     @Environment(\.dismiss) var dismiss
@@ -98,8 +55,6 @@ struct PostEventScreen: View {
     @State private var location = ""
     @State private var selectedCategory = "Community"
     @State private var description = ""
-    @State private var selectedImage: PhotosPickerItem? = nil
-    @State private var selectedImageData: Data? = nil
     @State private var showingCategoryPicker = false
     @State private var showLocationResults = false
     @State private var showError = false
@@ -107,6 +62,21 @@ struct PostEventScreen: View {
     
     let accentColor = Color.white
     let gradientColors = [Color.black, Color.black]
+    
+    let categories = [
+        "Food & Drinks",
+        "Music & Concerts",
+        "Nightlife",
+        "Community",
+        "Arts & Culture", 
+        "Markets",
+        "Sports",
+        "Comedy",
+        "Theater",
+        "Family Fun",
+        "Education",
+        "Technology"
+    ]
     
     private func validateForm() -> Bool {
         if eventTitle.isEmpty {
@@ -152,11 +122,12 @@ struct PostEventScreen: View {
             )
             
             // Create new event
-            let newEvent = Event(name: eventTitle,
-                               date: formattedDate,
-                               location: location,
-                               image: "calendar", // Default icon for now
-                               category: selectedCategory)
+            let newEvent = Event(
+                name: eventTitle,
+                date: formattedDate,
+                location: location,
+                category: selectedCategory
+            )
             
             // Here you would typically save the event to your data store
             // For now we'll just print and dismiss
@@ -189,19 +160,6 @@ struct PostEventScreen: View {
                             
                             // Description
                             descriptionSection
-                            
-                            ImageUploadSection(
-                                selectedImage: $selectedImage,
-                                selectedImageData: $selectedImageData,
-                                accentColor: accentColor
-                            )
-                            .onChange(of: selectedImage) { newItem in
-                                Task {
-                                    if let data = try? await newItem?.loadTransferable(type: Data.self) {
-                                        selectedImageData = data
-                                    }
-                                }
-                            }
                         }
                         .padding()
                     }
@@ -215,7 +173,20 @@ struct PostEventScreen: View {
                 toolbarContent
             }
             .sheet(isPresented: $showingCategoryPicker) {
-                CategoryPickerView(selectedCategory: $selectedCategory)
+                List(categories, id: \.self) { category in
+                    Button(action: {
+                        selectedCategory = category
+                        showingCategoryPicker = false
+                    }) {
+                        HStack {
+                            Text(category)
+                            Spacer()
+                            if category == selectedCategory {
+                                Image(systemName: "checkmark")
+                            }
+                        }
+                    }
+                }
             }
             .background(
                 LinearGradient(

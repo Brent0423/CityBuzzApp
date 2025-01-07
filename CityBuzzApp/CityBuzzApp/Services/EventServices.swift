@@ -31,7 +31,6 @@ class EventService {
                       city: "Kalamazoo",
                       fullAddress: "3600 Vanrick Dr, Kalamazoo, MI 49001"
                   ),
-                  image: "hockey.stick", 
                   category: "Sports"),
             
             Event(name: "Farmers Market", 
@@ -42,7 +41,6 @@ class EventService {
                       city: "Kalamazoo",
                       fullAddress: "1157 Bank St, Kalamazoo, MI 49001"
                   ),
-                  image: "leaf.fill", 
                   category: "Markets"),
             
             Event(name: "WMU Basketball", 
@@ -53,8 +51,7 @@ class EventService {
                       city: "Kalamazoo",
                       fullAddress: "Read Fieldhouse, Kalamazoo, MI 49008"
                   ),
-                  image: "basketball.fill", 
-                  category: "College Events"),
+                  category: "Sports"),
             
             Event(name: "KIA Exhibition", 
                   date: "1/25 @ 11 AM", 
@@ -64,7 +61,6 @@ class EventService {
                       city: "Kalamazoo",
                       fullAddress: "314 S Park St, Kalamazoo, MI 49007"
                   ),
-                  image: "photo.fill", 
                   category: "Arts & Culture")
         ]
     }

@@ -23,8 +23,7 @@ struct HomeScreen: View {
                   fullAddress: "355 E Kalamazoo Ave, Kalamazoo, MI 49007",
                   latitude: 42.2917,
                   longitude: -85.5872
-              ), 
-              image: "mug.fill", 
+              ),
               category: "Food & Drinks"),
         Event(name: "Winter Art Hop", 
               date: "1/18 @ 5 PM", 
@@ -35,8 +34,7 @@ struct HomeScreen: View {
                   fullAddress: "100 W Michigan Ave, Kalamazoo, MI 49007",
                   latitude: 42.2912,
                   longitude: -85.5850
-              ), 
-              image: "paintpalette.fill", 
+              ),
               category: "Arts & Culture"),
         Event(name: "State Theatre Concert", 
               date: "1/20 @ 8 PM", 
@@ -47,8 +45,7 @@ struct HomeScreen: View {
                   fullAddress: "404 S Burdick St, Kalamazoo, MI 49007",
                   latitude: 42.2906,
                   longitude: -85.5859
-              ), 
-              image: "music.note", 
+              ),
               category: "Music & Concerts"),
         Event(name: "Comedy Night", 
               date: "1/21 @ 9 PM", 
@@ -59,8 +56,7 @@ struct HomeScreen: View {
                   fullAddress: "241 E Kalamazoo Ave, Kalamazoo, MI 49007",
                   latitude: 42.2918,
                   longitude: -85.5833
-              ), 
-              image: "theatermasks.fill", 
+              ),
               category: "Nightlife")
     ]
     
@@ -160,9 +156,9 @@ struct HomeScreen: View {
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
-                                ForEach(featuredEvents) { event in
+                                ForEach(Array(featuredEvents.enumerated()), id: \.element.id) { index, event in
                                     NavigationLink(value: event.id.uuidString) {
-                                        FeaturedEventCard(event: event, gradient: gradients[events.firstIndex(of: event)! % gradients.count])
+                                        FeaturedEventCard(event: event, gradient: gradients[index % gradients.count])
                                     }
                                 }
                             }
@@ -211,6 +207,9 @@ struct FeaturedEventCard: View {
                     Text(event.name)
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
+                        .lineLimit(2)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .multilineTextAlignment(.leading)
                     
                     HStack {
                         Image(systemName: "calendar")
@@ -222,6 +221,7 @@ struct FeaturedEventCard: View {
                             .font(.system(size: 14))
                         Text(event.location.name)
                             .font(.system(size: 14))
+                            .lineLimit(1)
                     }
                     .foregroundColor(.white.opacity(0.9))
                 }

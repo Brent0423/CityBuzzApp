@@ -27,33 +27,33 @@ struct DiscoverScreen: View {
     
     // Sample categories with their respective icons
     let categoryItems = [
-        CategoryItem(name: "Food & Drinks", 
-                    icon: "fork.knife", 
-                    color: Color(hex: "FF6B6B")),  // Appetizing red
-        
-        CategoryItem(name: "Music & Concerts", 
-                    icon: "music.note.list", 
-                    color: Color(hex: "8A2BE2")),  // Electric purple
-        
-        CategoryItem(name: "Nightlife", 
-                    icon: "moon.stars.fill", 
-                    color: Color(hex: "191970")),  // Midnight blue
-        
-        CategoryItem(name: "Community", 
-                    icon: "person.3.fill", 
-                    color: Color(hex: "20B2AA")),  // Light sea green
-        
-        CategoryItem(name: "Arts & Culture", 
-                    icon: "paintpalette.fill", 
-                    color: Color(hex: "FF4500")),  // Vibrant orange-red like paint
+        CategoryItem(name: "Sports", 
+                    icon: "figure.run", 
+                    color: Color(hex: "4169E1")),  // Royal blue
         
         CategoryItem(name: "Markets", 
                     icon: "leaf.fill", 
                     color: Color(hex: "32CD32")),  // Lime green
         
-        CategoryItem(name: "Sports", 
-                    icon: "figure.run", 
-                    color: Color(hex: "4169E1")),  // Royal blue
+        CategoryItem(name: "Arts & Culture", 
+                    icon: "paintpalette.fill", 
+                    color: Color(hex: "FF4500")),  // Vibrant orange-red
+        
+        CategoryItem(name: "Community", 
+                    icon: "person.3.fill", 
+                    color: Color(hex: "20B2AA")),  // Light sea green
+                    
+        CategoryItem(name: "Nightlife", 
+                    icon: "moon.stars.fill", 
+                    color: Color(hex: "191970")),  // Midnight blue
+        
+        CategoryItem(name: "Music & Concerts", 
+                    icon: "music.note.list", 
+                    color: Color(hex: "8A2BE2")),  // Electric purple
+        
+        CategoryItem(name: "Food & Drinks", 
+                    icon: "fork.knife", 
+                    color: Color(hex: "FF6B6B")),  // Appetizing red
         
         CategoryItem(name: "Comedy", 
                     icon: "face.smiling.fill", 

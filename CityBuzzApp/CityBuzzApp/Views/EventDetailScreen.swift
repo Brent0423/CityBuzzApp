@@ -23,11 +23,11 @@ struct EventDetailScreen: View {
                 ZStack(alignment: .top) {
                     // Event banner
                     Rectangle()
-                        .fill(event.categoryColor)
+                        .fill(LinearGradient(colors: [.blue, .purple], startPoint: .topLeading, endPoint: .bottomTrailing))
                         .frame(height: 200)
                         .overlay(
                             VStack {
-                                Image(systemName: event.image)
+                                Image(systemName: "calendar")
                                     .resizable()
                                     .scaledToFit()
                                     .foregroundColor(.white)
