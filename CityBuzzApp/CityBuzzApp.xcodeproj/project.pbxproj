@@ -24,7 +24,6 @@
 		C9244CF42D29CA5E001F6BB1 /* GroupBoxStyle+Dark.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244CF32D29CA5E001F6BB1 /* GroupBoxStyle+Dark.swift */; };
 		C9244CF62D29CD4C001F6BB1 /* CityBuzzApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244CF52D29CD4C001F6BB1 /* CityBuzzApp.swift */; };
 		C9244CF82D29CEA0001F6BB1 /* CategoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244CF72D29CE9F001F6BB1 /* CategoryPickerView.swift */; };
-		C9244CF92D29D07F001F6BB1 /* LocationSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244CC42D299E11001F6BB1 /* LocationSearchManager.swift */; };
 		C9244CFB2D29D2EA001F6BB1 /* Assets.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = C9244CFA2D29D2EA001F6BB1 /* Assets.xcassets */; };
 		C9244CFD2D29D4A2001F6BB1 /* EventServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244CFC2D29D4A1001F6BB1 /* EventServices.swift */; };
 		C9244D012D2A2342001F6BB1 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D002D2A2342001F6BB1 /* TabItem.swift */; };
@@ -34,6 +33,13 @@
 		C9244D432D2C823E001F6BB1 /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D402D2C823E001F6BB1 /* AboutScreen.swift */; };
 		C9244D4A2D2C884B001F6BB1 /* AccountScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D492D2C884B001F6BB1 /* AccountScreen.swift */; };
 		C9244D4D2D2C88EB001F6BB1 /* NotificationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D4C2D2C88EB001F6BB1 /* NotificationsScreen.swift */; };
+		C9244D532D2D6DBB001F6BB1 /* EventDetailScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D522D2D6DBB001F6BB1 /* EventDetailScreen.swift */; };
+		C9244D562D2D762B001F6BB1 /* EventManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D542D2D762B001F6BB1 /* EventManager.swift */; };
+		C9244D5B2D2D7A73001F6BB1 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D5A2D2D7A72001F6BB1 /* LocationManager.swift */; };
+		C9244D5D2D2D7AB0001F6BB1 /* LocationSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D5C2D2D7AB0001F6BB1 /* LocationSearchManager.swift */; };
+		C9244D5F2D2D8662001F6BB1 /* event.html in Sources */ = {isa = PBXBuildFile; fileRef = C9244D5E2D2D8662001F6BB1 /* event.html */; };
+		C9244D612D2D866E001F6BB1 /* event.css in Sources */ = {isa = PBXBuildFile; fileRef = C9244D602D2D866E001F6BB1 /* event.css */; };
+		C9244D662D2D99E0001F6BB1 /* EventListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D652D2D99E0001F6BB1 /* EventListItem.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,7 +68,6 @@
 		C9244C912D26DBD2001F6BB1 /* CityBuzzAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityBuzzAppUITests.swift; sourceTree = "<group>"; };
 		C9244C932D26DBD2001F6BB1 /* CityBuzzAppUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CityBuzzAppUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		C9244CAC2D26EB4A001F6BB1 /* Event.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		C9244CC42D299E11001F6BB1 /* LocationSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = LocationSearchManager.swift; path = ../Views/LocationSearchManager.swift; sourceTree = "<group>"; };
 		C9244CD92D29AE49001F6BB1 /* PostEventScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostEventScreen.swift; sourceTree = "<group>"; };
 		C9244CDA2D29AE4A001F6BB1 /* EventCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCard.swift; sourceTree = "<group>"; };
 		C9244CDB2D29AE4A001F6BB1 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -85,6 +90,13 @@
 		C9244D492D2C884B001F6BB1 /* AccountScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountScreen.swift; sourceTree = "<group>"; };
 		C9244D4C2D2C88EB001F6BB1 /* NotificationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsScreen.swift; sourceTree = "<group>"; };
 		C9244D4E2D2C8AD7001F6BB1 /* EventFormComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFormComponents.swift; sourceTree = "<group>"; };
+		C9244D522D2D6DBB001F6BB1 /* EventDetailScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventDetailScreen.swift; sourceTree = "<group>"; };
+		C9244D542D2D762B001F6BB1 /* EventManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventManager.swift; sourceTree = "<group>"; };
+		C9244D5A2D2D7A72001F6BB1 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		C9244D5C2D2D7AB0001F6BB1 /* LocationSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationSearchManager.swift; sourceTree = "<group>"; };
+		C9244D5E2D2D8662001F6BB1 /* event.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = event.html; sourceTree = "<group>"; };
+		C9244D602D2D866E001F6BB1 /* event.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = event.css; sourceTree = "<group>"; };
+		C9244D652D2D99E0001F6BB1 /* EventListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventListItem.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,7 +148,9 @@
 		C9244C752D26DBD1001F6BB1 /* CityBuzzApp */ = {
 			isa = PBXGroup;
 			children = (
+				C9244D642D2D86E9001F6BB1 /* styles */,
 				C9244CF52D29CD4C001F6BB1 /* CityBuzzApp.swift */,
+				C9244D622D2D8677001F6BB1 /* pages */,
 				C9244CC82D299E36001F6BB1 /* Enums */,
 				C9244CC62D299E21001F6BB1 /* Extensions */,
 				C9244CC52D299E11001F6BB1 /* Managers */,
@@ -199,6 +213,7 @@
 				C9244D3F2D2C823E001F6BB1 /* HelpSupportScreen.swift */,
 				C9244D3E2D2C823E001F6BB1 /* PrivacyPolicyScreen.swift */,
 				C9244D3C2D2C7E30001F6BB1 /* SettingsScreen.swift */,
+				C9244D522D2D6DBB001F6BB1 /* EventDetailScreen.swift */,
 				C9244CF72D29CE9F001F6BB1 /* CategoryPickerView.swift */,
 				C9244CDB2D29AE4A001F6BB1 /* ContentView.swift */,
 				C9244CDD2D29AE4A001F6BB1 /* DiscoverScreen.swift */,
@@ -214,7 +229,9 @@
 		C9244CC52D299E11001F6BB1 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				C9244CC42D299E11001F6BB1 /* LocationSearchManager.swift */,
+				C9244D5C2D2D7AB0001F6BB1 /* LocationSearchManager.swift */,
+				C9244D5A2D2D7A72001F6BB1 /* LocationManager.swift */,
+				C9244D542D2D762B001F6BB1 /* EventManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -240,9 +257,26 @@
 		C9244D4F2D2C8AD7001F6BB1 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				C9244D652D2D99E0001F6BB1 /* EventListItem.swift */,
 				C9244D4E2D2C8AD7001F6BB1 /* EventFormComponents.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		C9244D622D2D8677001F6BB1 /* pages */ = {
+			isa = PBXGroup;
+			children = (
+				C9244D5E2D2D8662001F6BB1 /* event.html */,
+			);
+			path = pages;
+			sourceTree = "<group>";
+		};
+		C9244D642D2D86E9001F6BB1 /* styles */ = {
+			isa = PBXGroup;
+			children = (
+				C9244D602D2D866E001F6BB1 /* event.css */,
+			);
+			path = styles;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -374,6 +408,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9244D662D2D99E0001F6BB1 /* EventListItem.swift in Sources */,
+				C9244D612D2D866E001F6BB1 /* event.css in Sources */,
+				C9244D5F2D2D8662001F6BB1 /* event.html in Sources */,
+				C9244D5D2D2D7AB0001F6BB1 /* LocationSearchManager.swift in Sources */,
+				C9244D5B2D2D7A73001F6BB1 /* LocationManager.swift in Sources */,
+				C9244D562D2D762B001F6BB1 /* EventManager.swift in Sources */,
+				C9244D532D2D6DBB001F6BB1 /* EventDetailScreen.swift in Sources */,
 				C9244D4D2D2C88EB001F6BB1 /* NotificationsScreen.swift in Sources */,
 				C9244D4A2D2C884B001F6BB1 /* AccountScreen.swift in Sources */,
 				C9244D412D2C823E001F6BB1 /* PrivacyPolicyScreen.swift in Sources */,
@@ -383,7 +424,6 @@
 				C9244D012D2A2342001F6BB1 /* TabItem.swift in Sources */,
 				C9244CFD2D29D4A2001F6BB1 /* EventServices.swift in Sources */,
 				C9244CFB2D29D2EA001F6BB1 /* Assets.xcassets in Sources */,
-				C9244CF92D29D07F001F6BB1 /* LocationSearchManager.swift in Sources */,
 				C9244CF82D29CEA0001F6BB1 /* CategoryPickerView.swift in Sources */,
 				C9244CF62D29CD4C001F6BB1 /* CityBuzzApp.swift in Sources */,
 				C9244CF42D29CA5E001F6BB1 /* GroupBoxStyle+Dark.swift in Sources */,
@@ -394,8 +434,8 @@
 				C9244CE22D29AE4A001F6BB1 /* ContentView.swift in Sources */,
 				C9244CE32D29AE4A001F6BB1 /* TrendingEventsCarousel.swift in Sources */,
 				C9244CE42D29AE4A001F6BB1 /* DiscoverScreen.swift in Sources */,
-				C9244CE52D29AE4A001F6BB1 /* MainTabView.swift in Sources */,
 				C9244CE62D29AE4A001F6BB1 /* HomeScreen.swift in Sources */,
+				C9244CE52D29AE4A001F6BB1 /* MainTabView.swift in Sources */,
 				C9244CAE2D2784B8001F6BB1 /* Event.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

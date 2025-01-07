@@ -27,18 +27,53 @@ struct DiscoverScreen: View {
     
     // Sample categories with their respective icons
     let categoryItems = [
-        CategoryItem(name: "Food & Drinks", icon: "fork.knife", color: Color(hex: "FF6B6B")),
-        CategoryItem(name: "Music & Concerts", icon: "music.note", color: Color(hex: "A8E6CF")),
-        CategoryItem(name: "Nightlife", icon: "moon.stars.fill", color: Color(hex: "FFD93D")),
-        CategoryItem(name: "Community", icon: "person.3.fill", color: Color(hex: "4ECDC4")),
-        CategoryItem(name: "Arts & Culture", icon: "paintpalette.fill", color: Color(hex: "3B4371")),
-        CategoryItem(name: "Markets", icon: "cart.fill", color: Color(hex: "FF6B6B")),
-        CategoryItem(name: "Sports & Fitness", icon: "figure.run", color: Color(hex: "A8E6CF")),
-        CategoryItem(name: "Comedy", icon: "theatermasks.fill", color: Color(hex: "FFD93D")),
-        CategoryItem(name: "Theater", icon: "ticket.fill", color: Color(hex: "4ECDC4")),
-        CategoryItem(name: "Family Fun", icon: "heart.fill", color: Color(hex: "3B4371")),
-        CategoryItem(name: "Workshops", icon: "pencil", color: Color(hex: "FF6B6B")),
-        CategoryItem(name: "Charity", icon: "hand.raised.fill", color: Color(hex: "A8E6CF"))
+        CategoryItem(name: "Food & Drinks", 
+                    icon: "fork.knife", 
+                    color: Color(hex: "FF6B6B")),  // Appetizing red
+        
+        CategoryItem(name: "Music & Concerts", 
+                    icon: "music.note.list", 
+                    color: Color(hex: "8A2BE2")),  // Electric purple
+        
+        CategoryItem(name: "Nightlife", 
+                    icon: "moon.stars.fill", 
+                    color: Color(hex: "191970")),  // Midnight blue
+        
+        CategoryItem(name: "Community", 
+                    icon: "person.3.fill", 
+                    color: Color(hex: "20B2AA")),  // Light sea green
+        
+        CategoryItem(name: "Arts & Culture", 
+                    icon: "paintpalette.fill", 
+                    color: Color(hex: "FF4500")),  // Vibrant orange-red like paint
+        
+        CategoryItem(name: "Markets", 
+                    icon: "leaf.fill", 
+                    color: Color(hex: "32CD32")),  // Lime green
+        
+        CategoryItem(name: "Sports", 
+                    icon: "figure.run", 
+                    color: Color(hex: "4169E1")),  // Royal blue
+        
+        CategoryItem(name: "Comedy", 
+                    icon: "face.smiling.fill", 
+                    color: Color(hex: "FFD700")),  // Golden yellow
+        
+        CategoryItem(name: "Theater", 
+                    icon: "theatermasks.fill", 
+                    color: Color(hex: "DC143C")),  // Crimson red
+        
+        CategoryItem(name: "Family Fun", 
+                    icon: "heart.fill", 
+                    color: Color(hex: "FF1493")),  // Deep pink
+        
+        CategoryItem(name: "Workshops", 
+                    icon: "hammer.fill", 
+                    color: Color(hex: "D2691E")),  // Chocolate brown
+        
+        CategoryItem(name: "Charity", 
+                    icon: "hand.raised.fill", 
+                    color: Color(hex: "9370DB"))   // Medium purple
     ]
     
     var filteredEvents: [Event] {
@@ -56,180 +91,187 @@ struct DiscoverScreen: View {
     }
     
     var body: some View {
-        NavigationView {
-            ScrollViewReader { proxy in
-                ScrollView {
-                    VStack(spacing: 25) {
-                        Color.clear
-                            .frame(height: 0)
-                            .id(scrollSpace)
-                        
-                        // Search Bar
-                        HStack {
-                            Image(systemName: "magnifyingglass")
-                                .foregroundColor(.gray)
-                            TextField("Search events...", text: $searchText)
-                                .foregroundColor(.white)
-                                .autocapitalization(.none)
-                                .submitLabel(.search)
+        NavigationStack {
+            ZStack(alignment: .top) {
+                // Fixed header background
+                Color.black
+                    .frame(height: 0)
+                    .ignoresSafeArea()
+                
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        VStack(spacing: 24) {
+                            // Title
+                            Text("Discover")
+                                .font(.system(size: 40, weight: .bold))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                                .padding(.top, -8)
                             
-                            if !searchText.isEmpty {
-                                Button(action: { 
-                                    withAnimation { searchText = "" }
-                                }) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .foregroundColor(.gray)
+                            // Search Bar
+                            HStack {
+                                Image(systemName: "magnifyingglass")
+                                    .foregroundColor(.gray)
+                                TextField("Search events...", text: $searchText)
+                                    .foregroundColor(.white)
+                                    .autocapitalization(.none)
+                                    .submitLabel(.search)
+                                
+                                if !searchText.isEmpty {
+                                    Button(action: { 
+                                        withAnimation { searchText = "" }
+                                    }) {
+                                        Image(systemName: "xmark.circle.fill")
+                                            .foregroundColor(.gray)
+                                    }
                                 }
                             }
-                        }
-                        .padding(12)
-                        .background(Color.white.opacity(0.1))
-                        .cornerRadius(15)
-                        .padding(.horizontal, 20)
-                        
-                        // Show either categories or search results
-                        if searchText.isEmpty {
-                            // Categories Grid
-                            VStack(alignment: .leading, spacing: 15) {
-                                HStack {
-                                    Text("Categories")
+                            .padding(12)
+                            .background(Color.white.opacity(0.1))
+                            .cornerRadius(15)
+                            .padding(.horizontal, 20)
+                            
+                            // Show either categories or search results
+                            if searchText.isEmpty {
+                                // Categories Grid
+                                VStack(alignment: .leading, spacing: 15) {
+                                    HStack {
+                                        Text("Categories")
+                                            .font(.title2.bold())
+                                            .foregroundColor(.white)
+                                            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        
+                                        if !selectedCategories.isEmpty {
+                                            Spacer()
+                                            Button(action: {
+                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                    selectedCategories.removeAll()
+                                                }
+                                                let generator = UIImpactFeedbackGenerator(style: .medium)
+                                                generator.impactOccurred()
+                                            }) {
+                                                HStack(spacing: 4) {
+                                                    Image(systemName: "xmark.circle.fill")
+                                                    Text("Clear")
+                                                }
+                                                .foregroundColor(.gray)
+                                                .font(.system(size: 14, weight: .medium))
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 20)
+                                    
+                                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                                        ForEach(categoryItems, id: \.name) { category in
+                                            CategoryCard(
+                                                category: category,
+                                                isSelected: selectedCategories.contains(category.name),
+                                                action: {
+                                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                        toggleCategory(category.name)
+                                                    }
+                                                }
+                                            )
+                                            .transition(.asymmetric(
+                                                insertion: .scale.combined(with: .opacity),
+                                                removal: .opacity
+                                            ))
+                                        }
+                                    }
+                                    .padding(.horizontal, 20)
+                                }
+                                
+                                // Events List with title "Recommended for You"
+                                VStack(alignment: .leading, spacing: 15) {
+                                    Text("Recommended for You")
                                         .font(.title2.bold())
                                         .foregroundColor(.white)
+                                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .padding(.horizontal, 20)
                                     
-                                    if !selectedCategories.isEmpty {
-                                        Spacer()
-                                        Button(action: {
-                                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                selectedCategories.removeAll()
-                                            }
-                                            let generator = UIImpactFeedbackGenerator(style: .medium)
-                                            generator.impactOccurred()
-                                        }) {
-                                            HStack(spacing: 4) {
-                                                Image(systemName: "xmark.circle.fill")
-                                                Text("Clear")
-                                            }
-                                            .foregroundColor(.gray)
-                                            .font(.system(size: 14, weight: .medium))
-                                        }
-                                    }
-                                }
-                                .padding(.horizontal, 20)
-                                
-                                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 15) {
-                                    ForEach(categoryItems, id: \.name) { category in
-                                        CategoryCard(
-                                            category: category,
-                                            isSelected: selectedCategories.contains(category.name),
-                                            action: {
-                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                    toggleCategory(category.name)
+                                    if filteredEvents.isEmpty {
+                                        EmptyStateView()
+                                    } else {
+                                        LazyVStack(spacing: 10) {
+                                            ForEach(filteredEvents) { event in
+                                                NavigationLink(value: event.id.uuidString) {
+                                                    EventListItem(event: event)
                                                 }
                                             }
-                                        )
-                                        .transition(.asymmetric(
-                                            insertion: .scale.combined(with: .opacity),
-                                            removal: .opacity
-                                        ))
+                                        }
+                                        .padding(.horizontal, 20)
                                     }
                                 }
-                                .padding(.horizontal, 20)
-                            }
-                            
-                            // Events List with title "Recommended for You"
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("Recommended for You")
-                                    .font(.title2.bold())
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 20)
-                                
-                                if filteredEvents.isEmpty {
-                                    EmptyStateView()
-                                } else {
-                                    LazyVStack(spacing: 15) {
-                                        ForEach(filteredEvents) { event in
-                                            EventCard(event: event)
+                            } else {
+                                // Search Results
+                                VStack(alignment: .leading, spacing: 15) {
+                                    Text("Search Results")
+                                        .font(.title2.bold())
+                                        .foregroundColor(.white)
+                                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        .padding(.horizontal, 20)
+                                    
+                                    if filteredEvents.isEmpty {
+                                        EmptyStateView()
+                                    } else {
+                                        LazyVStack(spacing: 10) {
+                                            ForEach(filteredEvents) { event in
+                                                NavigationLink(value: event.id.uuidString) {
+                                                    EventListItem(event: event)
+                                                }
+                                            }
                                         }
+                                        .padding(.horizontal, 20)
                                     }
-                                    .padding(.horizontal, 20)
-                                }
-                            }
-                        } else {
-                            // Search Results
-                            VStack(alignment: .leading, spacing: 15) {
-                                Text("Search Results")
-                                    .font(.title2.bold())
-                                    .foregroundColor(.white)
-                                    .padding(.horizontal, 20)
-                                
-                                if filteredEvents.isEmpty {
-                                    EmptyStateView()
-                                } else {
-                                    LazyVStack(spacing: 15) {
-                                        ForEach(filteredEvents) { event in
-                                            EventCard(event: event)
-                                        }
-                                    }
-                                    .padding(.horizontal, 20)
                                 }
                             }
                         }
+                        .padding(.vertical)
+                        .background(
+                            GeometryReader { geometry in
+                                Color.clear.preference(
+                                    key: ScrollOffsetPreferenceKey.self,
+                                    value: geometry.frame(in: .named("scroll")).minY
+                                )
+                            }
+                        )
                     }
-                    .padding(.vertical, 20)
-                    .background(
-                        GeometryReader { geometry in
-                            Color.clear.preference(
-                                key: ScrollOffsetPreferenceKey.self,
-                                value: geometry.frame(in: .named("scroll")).minY
-                            )
-                        }
-                    )
-                }
-                .coordinateSpace(name: "scroll")
-                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                    scrollOffset = value
-                    showScrollToTop = value < -150 // Show button after scrolling down 150pts
-                }
-                
-                // Scroll to top button
-                if showScrollToTop {
-                    VStack {
-                        Spacer()
-                        HStack {
+                    .coordinateSpace(name: "scroll")
+                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                        scrollOffset = value
+                        showScrollToTop = value < -150 // Show button after scrolling down 150pts
+                    }
+                    
+                    // Scroll to top button
+                    if showScrollToTop {
+                        VStack {
                             Spacer()
-                            Button(action: {
-                                withAnimation(.spring()) {
-                                    proxy.scrollTo(scrollSpace, anchor: .top)
+                            HStack {
+                                Spacer()
+                                Button(action: {
+                                    withAnimation(.spring()) {
+                                        proxy.scrollTo(scrollSpace, anchor: .top)
+                                    }
+                                    let generator = UIImpactFeedbackGenerator(style: .light)
+                                    generator.impactOccurred()
+                                }) {
+                                    Image(systemName: "arrow.up")
+                                        .font(.headline)
+                                        .foregroundColor(.white)
+                                        .padding()
+                                        .background(Color.blue)
+                                        .clipShape(Circle())
+                                        .shadow(color: .black.opacity(0.2), radius: 5)
                                 }
-                                let generator = UIImpactFeedbackGenerator(style: .light)
-                                generator.impactOccurred()
-                            }) {
-                                Image(systemName: "arrow.up")
-                                    .font(.headline)
-                                    .foregroundColor(.white)
-                                    .padding()
-                                    .background(Color.blue)
-                                    .clipShape(Circle())
-                                    .shadow(color: .black.opacity(0.2), radius: 5)
+                                .padding(.trailing, 20)
+                                .padding(.bottom, 20)
+                                .transition(.scale.combined(with: .opacity))
                             }
-                            .padding(.trailing, 20)
-                            .padding(.bottom, 20)
-                            .transition(.scale.combined(with: .opacity))
                         }
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("Discover")
-                        .font(.system(size: 42, weight: .heavy))
-                        .foregroundColor(.white)
-                        .shadow(color: Color.white.opacity(0.2), radius: 2, x: 0, y: 1)
-                        .tracking(0.4) // Letter spacing
-                        .padding(.top, 20)
-                }
-            }
+            .toolbar(.hidden)
             .background(Color.black)
             .alert("Error", isPresented: $showError) {
                 Button("Retry") {
@@ -243,6 +285,11 @@ struct DiscoverScreen: View {
             .task {
                 if events.isEmpty {
                     await loadInitialEvents()
+                }
+            }
+            .navigationDestination(for: String.self) { eventId in
+                if let event = EventManager.shared.getEvent(id: eventId) {
+                    EventDetailScreen(event: event)
                 }
             }
         }
@@ -329,6 +376,7 @@ struct FilterView: View {
                     Text("Filter by Category")
                         .font(.title2.bold())
                         .foregroundColor(.white)
+                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
                         .padding(.horizontal)
                     
                     // Add more filter options here
@@ -369,18 +417,241 @@ struct CategoryCard: View {
     var body: some View {
         Button(action: action) {
             VStack(spacing: 12) {
-                Circle()
-                    .fill(category.color.opacity(0.2))
+                if category.name == "Food & Drinks" {
+                    // Clean, modern food icon
+                    Circle()
+                        .fill(Color(hex: "FF8C00"))  // Dark orange background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "fork.knife")  // Changed back to simple fork.knife
+                                .font(.system(size: 24))
+                                .foregroundColor(.black)  // Black icon
+                        )
+                } else if category.name == "Music & Concerts" {
+                    // Modern music icon with radiating lines
+                    ZStack {
+                        // Radiating lines
+                        ForEach(0..<48) { index in
+                            Rectangle()
+                                .fill(Color.white)
+                                .frame(width: 2, height: 8)
+                                .offset(y: -25)
+                                .rotationEffect(.degrees(Double(index) * 7.5))
+                        }
+                        
+                        // Center circle with music note
+                        Circle()
+                            .fill(Color(hex: "1E90FF"))  // Deep blue background
+                            .frame(width: 50, height: 50)
+                            .overlay(
+                                Image(systemName: "music.note")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                            )
+                    }
                     .frame(width: 50, height: 50)
-                    .overlay(
-                        Image(systemName: category.icon)
-                            .font(.system(size: 24))
-                            .foregroundColor(category.color)
-                    )
+                } else if category.name == "Nightlife" {
+                    // Special moon and stars icon
+                    Circle()
+                        .fill(Color.black)
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "moon.stars.fill")
+                                .font(.system(size: 24))
+                                .foregroundStyle(
+                                    .linearGradient(
+                                        colors: [
+                                            Color(hex: "FFF4E3"),  // Warm moon glow
+                                            Color(hex: "FFE5B4"),  // Peach moon
+                                            Color(hex: "FFD700"),  // Golden stars
+                                            Color(hex: "FFFF00")   // Bright stars
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                        )
+                } else if category.name == "Community" {
+                    // Modern community icon
+                    Circle()
+                        .fill(Color(hex: "20B2AA"))  // Teal background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "person.3.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(.white)  // White icon
+                                .offset(y: 2)  // Slight adjustment to center the icon better
+                        )
+                } else if category.name == "Arts & Culture" {
+                    // Modern paint palette icon
+                    Circle()
+                        .fill(Color(hex: "FF4500"))  // Vibrant orange-red background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "paintpalette.fill")
+                                .font(.system(size: 24))
+                                .foregroundStyle(
+                                    .linearGradient(
+                                        colors: [
+                                            Color(hex: "FF0000"),  // Red
+                                            Color(hex: "4169E1"),  // Royal Blue
+                                            Color(hex: "FFD700"),  // Gold
+                                            Color(hex: "32CD32"),  // Lime Green
+                                            Color(hex: "FF1493"),  // Deep Pink
+                                            Color(hex: "9370DB")   // Medium Purple
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
+                                )
+                        )
+                } else if category.name == "Markets" {
+                    // Modern markets icon with leaf
+                    Circle()
+                        .fill(Color(hex: "2E8B57"))  // Sea green background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "leaf.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(.white)  // White icon
+                                .rotationEffect(.degrees(-45))  // Rotate leaf to match reference
+                        )
+                } else if category.name == "Sports" {
+                    // Modern sports icon with running figure
+                    Circle()
+                        .fill(Color(hex: "1E90FF"))  // Dodger blue background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            ZStack {
+                                // White line at bottom - shortened to stay within circle
+                                Rectangle()
+                                    .fill(Color.white)
+                                    .frame(width: 40, height: 2)  // Added width constraint
+                                    .offset(y: 15)
+                                
+                                // Running figure
+                                Image(systemName: "figure.run")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                    .offset(y: -2)  // Move figure up slightly above the line
+                            }
+                        )
+                } else if category.name == "Comedy" {
+                    // Modern comedy icon with smiling face
+                    Circle()
+                        .fill(Color(hex: "FFD700"))  // Golden yellow background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "face.smiling.fill")
+                                .font(.system(size: 28))  // Increased size from 24 to 28
+                                .foregroundStyle(
+                                    Color.black.opacity(0.8)  // Changed from white to semi-opaque black
+                                )
+                                .offset(y: 1)
+                        )
+                } else if category.name == "Theater" {
+                    // Modern theater masks icon
+                    Circle()
+                        .fill(Color(hex: "800020"))  // Burgundy/wine red background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: "theatermasks.fill")
+                                .font(.system(size: 24))
+                                .foregroundStyle(.white)  // White icon
+                                .offset(y: 1)  // Slight adjustment to center the icon
+                        )
+                } else if category.name == "Family Fun" {
+                    // Modern family icon like the reference
+                    Circle()
+                        .fill(Color(hex: "00CED1"))  // Turquoise background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            ZStack {
+                                // White line at bottom
+                                Rectangle()
+                                    .fill(Color.white)
+                                    .frame(width: 35, height: 1)
+                                    .offset(y: 12)
+                                
+                                // Family group icon - using custom arrangement
+                                HStack(spacing: 2) {
+                                    // Father figure
+                                    Image(systemName: "figure.stand")
+                                        .font(.system(size: 16))
+                                    // Child figure
+                                    Image(systemName: "figure.dress.line")
+                                        .font(.system(size: 12))
+                                    // Mother figure
+                                    Image(systemName: "figure.dress")
+                                        .font(.system(size: 16))
+                                }
+                                .foregroundColor(.white)
+                                .offset(y: -2)
+                            }
+                        )
+                } else if category.name == "Workshops" {
+                    // Modern workshops icon with gear and tools
+                    Circle()
+                        .fill(Color(hex: "FF8C00"))  // Orange background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            ZStack {
+                                // Large gear in background
+                                Image(systemName: "gear")
+                                    .font(.system(size: 32))
+                                    .foregroundColor(.white)
+                                    .rotationEffect(.degrees(22.5))  // Rotate for better tooth alignment
+                                
+                                // Smaller gear overlapping
+                                Image(systemName: "gear")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                    .offset(x: 8, y: 8)  // Position in bottom right
+                                    .rotationEffect(.degrees(-22.5))  // Counter-rotate
+                                
+                                // Tools in center
+                                Image(systemName: "wrench.and.screwdriver")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.white)
+                                    .offset(x: -2, y: -2)  // Position slightly up and left
+                            }
+                        )
+                } else if category.name == "Charity" {
+                    // Modern charity icon with hand and heart
+                    Circle()
+                        .fill(Color(hex: "9B2D86"))  // Rich purple background
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            ZStack {
+                                // Heart floating above hand
+                                Image(systemName: "heart.fill")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.white)
+                                    .offset(y: -8)  // Position heart above hand
+                                
+                                // Open hand reaching up
+                                Image(systemName: "hand.raised.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                    .offset(y: 4)  // Position hand slightly lower
+                            }
+                        )
+                } else {
+                    // Regular category icon
+                    Circle()
+                        .fill(category.color.opacity(0.2))
+                        .frame(width: 50, height: 50)
+                        .overlay(
+                            Image(systemName: category.icon)
+                                .font(.system(size: 24))
+                                .foregroundColor(category.color)
+                        )
+                }
                 
                 Text(category.name)
                     .font(.system(size: 14, weight: .medium))
                     .foregroundColor(.white)
+                    .shadow(color: .black.opacity(0.3), radius: 1, x: 0, y: 1)
                     .multilineTextAlignment(.center)
             }
             .frame(maxWidth: .infinity)
@@ -392,51 +663,6 @@ struct CategoryCard: View {
                     .stroke(isSelected ? category.color : Color.white.opacity(0.1), lineWidth: 1)
             )
         }
-    }
-}
-
-struct RecommendedEventCard: View {
-    let event: Event
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            // Event Image/Icon
-            Circle()
-                .fill(LinearGradient(
-                    gradient: Gradient(colors: [.blue, .blue.opacity(0.7)]),
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                ))
-                .frame(width: 70, height: 70)
-                .overlay(
-                    Image(systemName: event.image)
-                        .foregroundColor(.white)
-                        .font(.system(size: 30))
-                )
-            
-            // Event Details
-            VStack(alignment: .leading, spacing: 8) {
-                Text(event.name)
-                    .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(.white)
-                
-                Text(event.date)
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-                
-                Text(event.location.name)
-                    .font(.system(size: 14))
-                    .foregroundColor(.gray)
-            }
-        }
-        .frame(width: 160)
-        .padding(16)
-        .background(Color.white.opacity(0.05))
-        .cornerRadius(16)
-        .overlay(
-            RoundedRectangle(cornerRadius: 16)
-                .stroke(Color.white.opacity(0.1), lineWidth: 1)
-        )
     }
 }
 
@@ -452,4 +678,4 @@ struct ScrollOffsetPreferenceKey: PreferenceKey {
     static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
         value = nextValue()
     }
-} 
+}

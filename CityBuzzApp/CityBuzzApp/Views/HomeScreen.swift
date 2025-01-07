@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct HomeScreen: View {
+    @Environment(\.presentationMode) var presentationMode
     @State private var searchText = ""
     @State private var selectedDate = Date().addingTimeInterval(-365*24*60*60)
     @State private var showDatePicker = false
@@ -13,17 +14,61 @@ struct HomeScreen: View {
     ]
     
     let events = [
-        Event(name: "Bell's Winter Beer Garden", date: "1/16 @ 7 PM", location: Location(name: "Bell's Eccentric Cafe", area: "Downtown", city: "Kalamazoo", fullAddress: "355 E Kalamazoo Ave, Kalamazoo, MI 49007"), image: "mug.fill", category: "Food & Drinks"),
-        Event(name: "Winter Art Hop", date: "1/18 @ 5 PM", location: Location(name: "Kalamazoo Mall", area: "Downtown", city: "Kalamazoo", fullAddress: "100 W Michigan Ave, Kalamazoo, MI 49007"), image: "paintpalette.fill", category: "Arts & Culture"),
-        Event(name: "State Theatre Concert", date: "1/20 @ 8 PM", location: Location(name: "Kalamazoo State Theatre", area: "Downtown", city: "Kalamazoo", fullAddress: "404 S Burdick St, Kalamazoo, MI 49007"), image: "music.note", category: "Music & Concerts"),
-        Event(name: "Comedy Night", date: "1/21 @ 9 PM", location: Location(name: "Shakespeare's Pub", area: "Downtown", city: "Kalamazoo", fullAddress: "241 E Kalamazoo Ave, Kalamazoo, MI 49007"), image: "theatermasks.fill", category: "Nightlife")
+        Event(name: "Bell's Winter Beer Garden", 
+              date: "1/16 @ 7 PM", 
+              location: Location(
+                  name: "Bell's Eccentric Cafe", 
+                  area: "Downtown", 
+                  city: "Kalamazoo", 
+                  fullAddress: "355 E Kalamazoo Ave, Kalamazoo, MI 49007",
+                  latitude: 42.2917,
+                  longitude: -85.5872
+              ), 
+              image: "mug.fill", 
+              category: "Food & Drinks"),
+        Event(name: "Winter Art Hop", 
+              date: "1/18 @ 5 PM", 
+              location: Location(
+                  name: "Kalamazoo Mall", 
+                  area: "Downtown", 
+                  city: "Kalamazoo", 
+                  fullAddress: "100 W Michigan Ave, Kalamazoo, MI 49007",
+                  latitude: 42.2912,
+                  longitude: -85.5850
+              ), 
+              image: "paintpalette.fill", 
+              category: "Arts & Culture"),
+        Event(name: "State Theatre Concert", 
+              date: "1/20 @ 8 PM", 
+              location: Location(
+                  name: "Kalamazoo State Theatre", 
+                  area: "Downtown", 
+                  city: "Kalamazoo", 
+                  fullAddress: "404 S Burdick St, Kalamazoo, MI 49007",
+                  latitude: 42.2906,
+                  longitude: -85.5859
+              ), 
+              image: "music.note", 
+              category: "Music & Concerts"),
+        Event(name: "Comedy Night", 
+              date: "1/21 @ 9 PM", 
+              location: Location(
+                  name: "Shakespeare's Pub", 
+                  area: "Downtown", 
+                  city: "Kalamazoo", 
+                  fullAddress: "241 E Kalamazoo Ave, Kalamazoo, MI 49007",
+                  latitude: 42.2918,
+                  longitude: -85.5833
+              ), 
+              image: "theatermasks.fill", 
+              category: "Nightlife")
     ]
     
     var filteredEvents: [Event] {
-        var filtered = events
+        let events = EventManager.shared.getAllEvents()
         
         if !searchText.isEmpty {
-            filtered = filtered.filter { event in
+            return events.filter { event in
                 event.name.localizedCaseInsensitiveContains(searchText) || 
                 event.location.name.localizedCaseInsensitiveContains(searchText)
             }
@@ -31,7 +76,7 @@ struct HomeScreen: View {
         
         if selectedDate > Date().addingTimeInterval(-364*24*60*60) {
             let calendar = Calendar.current
-            filtered = filtered.filter { event in
+            return events.filter { event in
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateFormat = "M/dd '@' h a"
                 guard let eventDate = dateFormatter.date(from: event.date) else { return false }
@@ -39,7 +84,7 @@ struct HomeScreen: View {
             }
         }
         
-        return filtered
+        return events
     }
     
     var featuredEvents: [Event] {
@@ -50,12 +95,19 @@ struct HomeScreen: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 24) {
+                    Text("City Buzz")
+                        .font(.system(size: 40, weight: .bold))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, -8)
+                    
                     // Search Bar
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
+                            .font(.system(size: 18))
                         TextField("Search events...", text: $searchText)
                             .foregroundColor(.primary)
+                            .font(.system(size: 18))
                     }
                     .padding(12)
                     .background(Color(.systemGray6))
@@ -78,6 +130,7 @@ struct HomeScreen: View {
                         
                         Button(action: { showDatePicker.toggle() }) {
                             Image(systemName: "calendar")
+                                .font(.system(size: 18))
                                 .foregroundColor(.primary)
                                 .padding(.horizontal, 12)
                                 .padding(.vertical, 6)
@@ -102,14 +155,15 @@ struct HomeScreen: View {
                     // Featured Section
                     VStack(alignment: .leading) {
                         Text("Featured")
-                            .font(.title2)
-                            .fontWeight(.bold)
+                            .font(.system(size: 28, weight: .bold))
                             .padding(.horizontal)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
                                 ForEach(featuredEvents) { event in
-                                    FeaturedEventCard(event: event, gradient: gradients[events.firstIndex(of: event)! % gradients.count])
+                                    NavigationLink(value: event.id.uuidString) {
+                                        FeaturedEventCard(event: event, gradient: gradients[events.firstIndex(of: event)! % gradients.count])
+                                    }
                                 }
                             }
                             .padding(.horizontal)
@@ -119,17 +173,26 @@ struct HomeScreen: View {
                     // Event List
                     LazyVStack(spacing: 12) {
                         ForEach(filteredEvents) { event in
-                            EventListItem(event: event)
+                            NavigationLink(value: event.id.uuidString) {
+                                EventListItem(event: event)
+                            }
                         }
                     }
                     .padding(.horizontal)
                 }
                 .padding(.vertical)
             }
-            .navigationTitle("City Buzz")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarHidden(true)
         }
         .preferredColorScheme(.dark)
+        .gesture(
+            DragGesture()
+                .onEnded { gesture in
+                    if gesture.translation.width > 100 {
+                        presentationMode.wrappedValue.dismiss()
+                    }
+                }
+        )
     }
 }
 
@@ -146,17 +209,20 @@ struct FeaturedEventCard: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(event.name)
-                        .font(.headline)
+                        .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
                     
                     HStack {
                         Image(systemName: "calendar")
+                            .font(.system(size: 14))
                         Text(event.date)
+                            .font(.system(size: 14))
                         
                         Image(systemName: "mappin")
+                            .font(.system(size: 14))
                         Text(event.location.name)
+                            .font(.system(size: 14))
                     }
-                    .font(.caption)
                     .foregroundColor(.white.opacity(0.9))
                 }
                 .padding()
@@ -178,62 +244,12 @@ struct DateSelectionButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
+                .font(.system(size: 16, weight: .medium))
                 .foregroundColor(isSelected ? .white : .primary)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 6)
                 .background(isSelected ? Color.blue : Color(.systemGray6))
                 .cornerRadius(10)
         }
-    }
-}
-
-struct EventListItem: View {
-    let event: Event
-    
-    func getIconColor(for category: String) -> Color {
-        switch category {
-        case "Food & Drinks":
-            return Color(hex: "FF7B7B") // Red
-        case "Arts & Culture":
-            return Color(hex: "5151C6") // Purple
-        case "Music & Concerts":
-            return Color(hex: "8CD5C9") // Teal
-        case "Nightlife":
-            return Color(hex: "FFD426") // Yellow
-        default:
-            return .blue
-        }
-    }
-    
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: event.image)
-                .font(.title2)
-                .foregroundColor(.white)
-                .frame(width: 40, height: 40)
-                .background(getIconColor(for: event.category))
-                .clipShape(Circle())
-            
-            VStack(alignment: .leading, spacing: 4) {
-                Text(event.name)
-                    .font(.headline)
-                
-                HStack {
-                    Text(event.date)
-                    Text("•")
-                    Text(event.location.name)
-                }
-                .font(.caption)
-                .foregroundColor(.secondary)
-            }
-            
-            Spacer()
-            
-            Image(systemName: "chevron.right")
-                .foregroundColor(.gray)
-        }
-        .padding()
-        .background(Color(.systemGray6))
-        .cornerRadius(12)
     }
 }

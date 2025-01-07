@@ -142,15 +142,19 @@ struct PostEventScreen: View {
             let formattedDate = dateFormatter.string(from: combinedDate)
             
             // Create location object
-            let eventLocation = Location(name: location.components(separatedBy: ",")[0],
-                                      area: "Downtown", // Default for now
-                                      city: "Kalamazoo", // Default for now
-                                      fullAddress: location)
+            let location = Location(
+                name: location.components(separatedBy: ",")[0],
+                area: "Downtown", // Default for now
+                city: "Kalamazoo", // Default for now
+                fullAddress: location,
+                latitude: 0,
+                longitude: 0
+            )
             
             // Create new event
             let newEvent = Event(name: eventTitle,
                                date: formattedDate,
-                               location: eventLocation,
+                               location: location,
                                image: "calendar", // Default icon for now
                                category: selectedCategory)
             

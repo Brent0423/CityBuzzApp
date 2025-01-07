@@ -1,29 +1,5 @@
 import SwiftUI
 
-struct TrendingEventsCarousel: View {
-    let events: [Event]
-    @State private var currentIndex = 0
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Trending Now")
-                .font(.title2)
-                .fontWeight(.bold)
-                .foregroundColor(.white)
-                .padding(.horizontal)
-            
-            TabView(selection: $currentIndex) {
-                ForEach(events.prefix(3).indices, id: \.self) { index in
-                    TrendingEventCard(event: events[index])
-                        .tag(index)
-                }
-            }
-            .frame(height: 220)
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-        }
-    }
-}
-
 struct TrendingEventCard: View {
     let event: Event
     
@@ -75,4 +51,4 @@ struct TrendingEventCard: View {
         .cornerRadius(16)
         .padding(.horizontal)
     }
-} 
+}

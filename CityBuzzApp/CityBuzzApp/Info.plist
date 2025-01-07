@@ -4,6 +4,11 @@
 <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>We need your location to provide directions to events.</string>
-    <!-- Other existing keys -->
+    <key>CFBundleIdentifier</key>
+    <string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
 </dict>
 </plist> 
