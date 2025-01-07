@@ -62,25 +62,57 @@ struct HomeScreen: View {
     
     var filteredEvents: [Event] {
         let events = EventManager.shared.getAllEvents()
+        let calendar = Calendar.current
         
+        // Create date formatter for parsing event dates
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/dd '@' h a"
+        
+        // Get today and tomorrow dates for comparison
+        let today = calendar.startOfDay(for: Date())
+        let tomorrow = calendar.date(byAdding: .day, value: 1, to: today)!
+        
+        // Convert and sort events
+        let eventsWithDates = events.compactMap { event -> (Event, Date)? in
+            guard let date = dateFormatter.date(from: event.date) else { return nil }
+            // Get start of day for the event date
+            let eventDay = calendar.startOfDay(for: date)
+            return (event, eventDay)
+        }
+        
+        let sortedEvents = eventsWithDates.sorted { $0.1 < $1.1 }.map { $0.0 }
+        
+        // Search filter
         if !searchText.isEmpty {
-            return events.filter { event in
+            return sortedEvents.filter { event in
                 event.name.localizedCaseInsensitiveContains(searchText) || 
                 event.location.name.localizedCaseInsensitiveContains(searchText)
             }
         }
         
-        if selectedDate > Date().addingTimeInterval(-364*24*60*60) {
-            let calendar = Calendar.current
-            return events.filter { event in
-                let dateFormatter = DateFormatter()
-                dateFormatter.dateFormat = "M/dd '@' h a"
+        // Date filtering
+        if Calendar.current.isDateInToday(selectedDate) {
+            // Filter for today's events
+            return sortedEvents.filter { event in
                 guard let eventDate = dateFormatter.date(from: event.date) else { return false }
-                return calendar.isDate(eventDate, inSameDayAs: selectedDate)
+                return calendar.isDate(calendar.startOfDay(for: eventDate), inSameDayAs: today)
+            }
+        } else if Calendar.current.isDateInTomorrow(selectedDate) {
+            // Filter for tomorrow's events
+            return sortedEvents.filter { event in
+                guard let eventDate = dateFormatter.date(from: event.date) else { return false }
+                return calendar.isDate(calendar.startOfDay(for: eventDate), inSameDayAs: tomorrow)
+            }
+        } else if selectedDate > Date().addingTimeInterval(-364*24*60*60) {
+            // Filter for specific date
+            return sortedEvents.filter { event in
+                guard let eventDate = dateFormatter.date(from: event.date) else { return false }
+                return calendar.isDate(calendar.startOfDay(for: eventDate), 
+                                     inSameDayAs: calendar.startOfDay(for: selectedDate))
             }
         }
         
-        return events
+        return sortedEvents
     }
     
     var featuredEvents: [Event] {
