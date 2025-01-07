@@ -26,7 +26,7 @@ struct MainTabView: View {
                     Text(TabItem.post.title)
                 }
             
-            Text("Settings")
+            SettingsScreen()
                 .tag(TabItem.settings)
                 .tabItem {
                     Image(systemName: TabItem.settings.icon)

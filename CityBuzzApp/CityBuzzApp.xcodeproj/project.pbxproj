@@ -28,6 +28,12 @@
 		C9244CFB2D29D2EA001F6BB1 /* Assets.xcassets in Sources */ = {isa = PBXBuildFile; fileRef = C9244CFA2D29D2EA001F6BB1 /* Assets.xcassets */; };
 		C9244CFD2D29D4A2001F6BB1 /* EventServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244CFC2D29D4A1001F6BB1 /* EventServices.swift */; };
 		C9244D012D2A2342001F6BB1 /* TabItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D002D2A2342001F6BB1 /* TabItem.swift */; };
+		C9244D3D2D2C7E30001F6BB1 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D3C2D2C7E30001F6BB1 /* SettingsScreen.swift */; };
+		C9244D412D2C823E001F6BB1 /* PrivacyPolicyScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D3E2D2C823E001F6BB1 /* PrivacyPolicyScreen.swift */; };
+		C9244D422D2C823E001F6BB1 /* HelpSupportScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D3F2D2C823E001F6BB1 /* HelpSupportScreen.swift */; };
+		C9244D432D2C823E001F6BB1 /* AboutScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D402D2C823E001F6BB1 /* AboutScreen.swift */; };
+		C9244D4A2D2C884B001F6BB1 /* AccountScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D492D2C884B001F6BB1 /* AccountScreen.swift */; };
+		C9244D4D2D2C88EB001F6BB1 /* NotificationsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9244D4C2D2C88EB001F6BB1 /* NotificationsScreen.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +78,13 @@
 		C9244CFA2D29D2EA001F6BB1 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = CityBuzzApp/Assets.xcassets; sourceTree = "<group>"; };
 		C9244CFC2D29D4A1001F6BB1 /* EventServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventServices.swift; sourceTree = "<group>"; };
 		C9244D002D2A2342001F6BB1 /* TabItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TabItem.swift; path = ../../Enums/TabItem.swift; sourceTree = "<group>"; };
+		C9244D3C2D2C7E30001F6BB1 /* SettingsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreen.swift; sourceTree = "<group>"; };
+		C9244D3E2D2C823E001F6BB1 /* PrivacyPolicyScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivacyPolicyScreen.swift; sourceTree = "<group>"; };
+		C9244D3F2D2C823E001F6BB1 /* HelpSupportScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelpSupportScreen.swift; sourceTree = "<group>"; };
+		C9244D402D2C823E001F6BB1 /* AboutScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutScreen.swift; sourceTree = "<group>"; };
+		C9244D492D2C884B001F6BB1 /* AccountScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountScreen.swift; sourceTree = "<group>"; };
+		C9244D4C2D2C88EB001F6BB1 /* NotificationsScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsScreen.swift; sourceTree = "<group>"; };
+		C9244D4E2D2C8AD7001F6BB1 /* EventFormComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventFormComponents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +192,13 @@
 		C9244CC32D299DF3001F6BB1 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				C9244D4F2D2C8AD7001F6BB1 /* Components */,
+				C9244D4C2D2C88EB001F6BB1 /* NotificationsScreen.swift */,
+				C9244D492D2C884B001F6BB1 /* AccountScreen.swift */,
+				C9244D402D2C823E001F6BB1 /* AboutScreen.swift */,
+				C9244D3F2D2C823E001F6BB1 /* HelpSupportScreen.swift */,
+				C9244D3E2D2C823E001F6BB1 /* PrivacyPolicyScreen.swift */,
+				C9244D3C2D2C7E30001F6BB1 /* SettingsScreen.swift */,
 				C9244CF72D29CE9F001F6BB1 /* CategoryPickerView.swift */,
 				C9244CDB2D29AE4A001F6BB1 /* ContentView.swift */,
 				C9244CDD2D29AE4A001F6BB1 /* DiscoverScreen.swift */,
@@ -215,6 +235,14 @@
 				C9244D002D2A2342001F6BB1 /* TabItem.swift */,
 			);
 			path = Enums;
+			sourceTree = "<group>";
+		};
+		C9244D4F2D2C8AD7001F6BB1 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				C9244D4E2D2C8AD7001F6BB1 /* EventFormComponents.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -346,6 +374,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C9244D4D2D2C88EB001F6BB1 /* NotificationsScreen.swift in Sources */,
+				C9244D4A2D2C884B001F6BB1 /* AccountScreen.swift in Sources */,
+				C9244D412D2C823E001F6BB1 /* PrivacyPolicyScreen.swift in Sources */,
+				C9244D422D2C823E001F6BB1 /* HelpSupportScreen.swift in Sources */,
+				C9244D432D2C823E001F6BB1 /* AboutScreen.swift in Sources */,
+				C9244D3D2D2C7E30001F6BB1 /* SettingsScreen.swift in Sources */,
 				C9244D012D2A2342001F6BB1 /* TabItem.swift in Sources */,
 				C9244CFD2D29D4A2001F6BB1 /* EventServices.swift in Sources */,
 				C9244CFB2D29D2EA001F6BB1 /* Assets.xcassets in Sources */,

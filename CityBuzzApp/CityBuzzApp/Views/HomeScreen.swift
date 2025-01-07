@@ -2,7 +2,6 @@ import SwiftUI
 
 struct HomeScreen: View {
     @State private var searchText = ""
-    @State private var selectedCategory: String?
     @State private var selectedDate = Date().addingTimeInterval(-365*24*60*60)
     @State private var showDatePicker = false
     @Namespace private var animation
@@ -23,11 +22,10 @@ struct HomeScreen: View {
     var filteredEvents: [Event] {
         var filtered = events
         
-        if !searchText.isEmpty || selectedCategory != nil {
+        if !searchText.isEmpty {
             filtered = filtered.filter { event in
-                let matchesSearch = searchText.isEmpty || event.name.localizedCaseInsensitiveContains(searchText) || event.location.name.localizedCaseInsensitiveContains(searchText)
-                let matchesCategory = selectedCategory == nil || event.category == selectedCategory
-                return matchesSearch && matchesCategory
+                event.name.localizedCaseInsensitiveContains(searchText) || 
+                event.location.name.localizedCaseInsensitiveContains(searchText)
             }
         }
         
@@ -44,7 +42,7 @@ struct HomeScreen: View {
         return filtered
     }
     
-    var trendingEvents: [Event] {
+    var featuredEvents: [Event] {
         Array(events.prefix(3))
     }
     
@@ -52,109 +50,83 @@ struct HomeScreen: View {
         NavigationView {
             ScrollView {
                 VStack(spacing: 24) {
+                    // Search Bar
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
-                            .font(.system(size: 16))
                         TextField("Search events...", text: $searchText)
-                            .foregroundColor(.white)
-                            .font(.custom("Avenir-Medium", size: 16, relativeTo: .body))
-                            .accessibilityLabel("Search events")
+                            .foregroundColor(.primary)
                     }
-                    .padding(16)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color.white.opacity(0.08))
-                            .shadow(color: .white.opacity(0.1), radius: 5, x: 0, y: 2)
-                    )
-                    .padding(.horizontal, 20)
-                    .transition(.move(edge: .top))
+                    .padding(12)
+                    .background(Color(.systemGray6))
+                    .cornerRadius(10)
+                    .padding(.horizontal)
                     
-                    HStack {
+                    // Date Filter
+                    HStack(spacing: 12) {
                         DateSelectionButton(title: "All", isSelected: selectedDate < Date().addingTimeInterval(-364*24*60*60)) {
                             selectedDate = Date().addingTimeInterval(-365*24*60*60)
-                            showDatePicker = false
                         }
                         
                         DateSelectionButton(title: "Today", isSelected: Calendar.current.isDateInToday(selectedDate)) {
                             selectedDate = Date()
-                            showDatePicker = false
                         }
                         
                         DateSelectionButton(title: "Tomorrow", isSelected: Calendar.current.isDateInTomorrow(selectedDate)) {
-                            if let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date()) {
-                                selectedDate = tomorrow
-                            }
-                            showDatePicker = false
+                            selectedDate = Calendar.current.date(byAdding: .day, value: 1, to: Date()) ?? Date()
                         }
                         
                         Button(action: { showDatePicker.toggle() }) {
-                            HStack(spacing: 4) {
-                                Image(systemName: "calendar")
-                            }
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 8)
-                            .background((!Calendar.current.isDateInToday(selectedDate) && !Calendar.current.isDateInTomorrow(selectedDate)) ? Color.white.opacity(0.2) : Color.clear)
-                            .cornerRadius(8)
+                            Image(systemName: "calendar")
+                                .foregroundColor(.primary)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 6)
+                                .background(Color(.systemGray6))
+                                .cornerRadius(10)
                         }
                     }
-                    .foregroundColor(.white)
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal)
                     
                     if showDatePicker {
                         DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
                             .datePickerStyle(GraphicalDatePickerStyle())
-                            .padding(.horizontal, 20)
-                            .accentColor(.white)
-                            .colorScheme(.dark)
-                            .onChange(of: selectedDate) { _ in
-                                showDatePicker = false
-                            }
+                            .padding()
+                            .background(Color(.systemGray6))
+                            .cornerRadius(12)
+                            .padding(.horizontal)
                     }
                     
-                    VStack(alignment: .leading, spacing: 12) {
+                    // Featured Section
+                    VStack(alignment: .leading) {
                         Text("Featured")
-                            .font(.custom("Avenir-Heavy", size: 24, relativeTo: .title))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 20)
+                            .font(.title2)
+                            .fontWeight(.bold)
+                            .padding(.horizontal)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
-                            LazyHStack(spacing: 20) {
-                                ForEach(trendingEvents) { event in
+                            HStack(spacing: 16) {
+                                ForEach(featuredEvents) { event in
                                     FeaturedEventCard(event: event, gradient: gradients[events.firstIndex(of: event)! % gradients.count])
                                 }
                             }
-                            .padding(.horizontal, 20)
+                            .padding(.horizontal)
                         }
                     }
                     
+                    // Event List
                     LazyVStack(spacing: 12) {
                         ForEach(filteredEvents) { event in
-                            EventCard(event: event)
-                                .padding(.horizontal, 20)
+                            EventListItem(event: event)
                         }
                     }
+                    .padding(.horizontal)
                 }
-                .padding(.vertical, 20)
-                .background(Color.black)
-                .refreshable {
-                    // Implement pull-to-refresh action here
-                }
+                .padding(.vertical)
             }
-            .background(Color.black.edgesIgnoringSafeArea(.all))
             .navigationTitle("City Buzz")
             .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .principal) {
-                    Text("City Buzz")
-                        .font(.system(size: 42, weight: .heavy))
-                        .foregroundColor(.white)
-                        .shadow(color: Color.white.opacity(0.2), radius: 2, x: 0, y: 1)
-                        .tracking(0.4)
-                        .padding(.top, 20)
-                }
-            }
         }
+        .preferredColorScheme(.dark)
     }
 }
 
@@ -163,41 +135,35 @@ struct FeaturedEventCard: View {
     let gradient: [Color]
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .bottomLeading) {
+        VStack(alignment: .leading) {
+            ZStack(alignment: .bottom) {
                 Rectangle()
                     .fill(LinearGradient(colors: gradient, startPoint: .topLeading, endPoint: .bottomTrailing))
-                    .frame(height: 180)
+                    .frame(height: 160)
                 
-                VStack(alignment: .leading, spacing: 8) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(event.name)
-                        .font(.title3)
-                        .fontWeight(.bold)
+                        .font(.headline)
                         .foregroundColor(.white)
-                        .accessibilityLabel(event.name)
                     
-                    HStack(spacing: 12) {
-                        HStack(spacing: 4) {
-                            Image(systemName: "calendar")
-                            Text(event.date)
-                        }
+                    HStack {
+                        Image(systemName: "calendar")
+                        Text(event.date)
                         
-                        HStack(spacing: 4) {
-                            Image(systemName: "mappin")
-                            Text(event.location.name)
-                        }
+                        Image(systemName: "mappin")
+                        Text(event.location.name)
                     }
-                    .font(.subheadline)
+                    .font(.caption)
                     .foregroundColor(.white.opacity(0.9))
                 }
                 .padding()
+                .frame(maxWidth: .infinity, alignment: .leading)
                 .background(LinearGradient(colors: [.black.opacity(0.7), .clear], startPoint: .bottom, endPoint: .top))
             }
-
         }
         .frame(width: 280)
         .cornerRadius(16)
-        .shadow(color: .black.opacity(0.3), radius: 10, x: 0, y: 5)
+        .shadow(radius: 5)
     }
 }
 
@@ -209,11 +175,62 @@ struct DateSelectionButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(isSelected ? Color.white.opacity(0.2) : Color.clear)
-                .cornerRadius(8)
+                .foregroundColor(isSelected ? .white : .primary)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
+                .background(isSelected ? Color.blue : Color(.systemGray6))
+                .cornerRadius(10)
         }
     }
 }
 
+struct EventListItem: View {
+    let event: Event
+    
+    func getIconColor(for category: String) -> Color {
+        switch category {
+        case "Food & Drinks":
+            return Color(hex: "FF7B7B") // Red
+        case "Arts & Culture":
+            return Color(hex: "5151C6") // Purple
+        case "Music & Concerts":
+            return Color(hex: "8CD5C9") // Teal
+        case "Nightlife":
+            return Color(hex: "FFD426") // Yellow
+        default:
+            return .blue
+        }
+    }
+    
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: event.image)
+                .font(.title2)
+                .foregroundColor(.white)
+                .frame(width: 40, height: 40)
+                .background(getIconColor(for: event.category))
+                .cornerRadius(8)
+            
+            VStack(alignment: .leading, spacing: 4) {
+                Text(event.name)
+                    .font(.headline)
+                
+                HStack {
+                    Text(event.date)
+                    Text("•")
+                    Text(event.location.name)
+                }
+                .font(.caption)
+                .foregroundColor(.secondary)
+            }
+            
+            Spacer()
+            
+            Image(systemName: "chevron.right")
+                .foregroundColor(.gray)
+        }
+        .padding()
+        .background(Color(.systemGray6))
+        .cornerRadius(12)
+    }
+}
