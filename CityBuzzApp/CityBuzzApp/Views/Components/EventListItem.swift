@@ -52,14 +52,14 @@ struct EventListItem: View {
             // Event Icon with custom layouts for all categories
             Circle()
                 .fill(categoryItem?.color ?? .blue)
-                .frame(width: 50, height: 50)
+                .frame(width: 40, height: 40)
                 .overlay(
                     Group {
                         switch event.category {
                         case "Food & Drinks":
                             // Clean, modern food icon
                             Image(systemName: "fork.knife")
-                                .font(.system(size: 24))
+                                .font(.system(size: 20))
                                 .foregroundColor(.black)
                             
                         case "Music & Concerts":
@@ -69,13 +69,13 @@ struct EventListItem: View {
                                 ForEach(0..<48) { index in
                                     Rectangle()
                                         .fill(Color.white)
-                                        .frame(width: 2, height: 8)
-                                        .offset(y: -25)
+                                        .frame(width: 1.5, height: 6)
+                                        .offset(y: -20)
                                         .rotationEffect(.degrees(Double(index) * 7.5))
                                 }
                                 
                                 Image(systemName: "music.note")
-                                    .font(.system(size: 24))
+                                    .font(.system(size: 20))
                                     .foregroundColor(.white)
                             }
                             
@@ -84,11 +84,11 @@ struct EventListItem: View {
                             ZStack {
                                 Rectangle()
                                     .fill(Color.white)
-                                    .frame(width: 40, height: 2)
-                                    .offset(y: 15)
+                                    .frame(width: 32, height: 1.5)
+                                    .offset(y: 12)
                                 
                                 Image(systemName: "figure.run")
-                                    .font(.system(size: 24))
+                                    .font(.system(size: 20))
                                     .foregroundColor(.white)
                                     .offset(y: -2)
                             }
@@ -97,29 +97,29 @@ struct EventListItem: View {
                             // Modern comedy icon with smiling face
                             Circle()
                                 .fill(Color(hex: "FFD700"))  // Golden yellow background
-                                .frame(width: 50, height: 50)
+                                .frame(width: 40, height: 40)
                                 .overlay(
                                     Image(systemName: "face.smiling.fill")
-                                        .font(.system(size: 28))  // Slightly larger size
+                                        .font(.system(size: 24))
                                         .foregroundStyle(
-                                            Color.black.opacity(0.8)  // Semi-opaque black
+                                            Color.black.opacity(0.8)
                                         )
-                                        .offset(y: 1)  // Slight vertical adjustment
+                                        .offset(y: 1)
                                 )
                             
                         case "Arts & Culture":
                             // Modern paint palette icon with gradient
                             Image(systemName: "paintpalette.fill")
-                                .font(.system(size: 24))
+                                .font(.system(size: 20))
                                 .foregroundStyle(
                                     .linearGradient(
                                         colors: [
-                                            Color(hex: "FF0000"),  // Red
-                                            Color(hex: "4169E1"),  // Royal Blue
-                                            Color(hex: "FFD700"),  // Gold
-                                            Color(hex: "32CD32"),  // Lime Green
-                                            Color(hex: "FF1493"),  // Deep Pink
-                                            Color(hex: "9370DB")   // Medium Purple
+                                            Color(hex: "FF0000"),
+                                            Color(hex: "4169E1"),
+                                            Color(hex: "FFD700"),
+                                            Color(hex: "32CD32"),
+                                            Color(hex: "FF1493"),
+                                            Color(hex: "9370DB")
                                         ],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -129,21 +129,21 @@ struct EventListItem: View {
                         case "Markets":
                             // Modern markets icon with leaf
                             Image(systemName: "leaf.fill")
-                                .font(.system(size: 24))
+                                .font(.system(size: 20))
                                 .foregroundColor(.white)
-                                .rotationEffect(.degrees(-45))  // Rotate leaf to match design
+                                .rotationEffect(.degrees(-45))
                             
                         case "Nightlife":
                             // Special moon and stars icon
                             Image(systemName: "moon.stars.fill")
-                                .font(.system(size: 24))
+                                .font(.system(size: 20))
                                 .foregroundStyle(
                                     .linearGradient(
                                         colors: [
-                                            Color(hex: "FFF4E3"),  // Warm moon glow
-                                            Color(hex: "FFE5B4"),  // Peach moon
-                                            Color(hex: "FFD700"),  // Golden stars
-                                            Color(hex: "FFFF00")   // Bright stars
+                                            Color(hex: "FFF4E3"),
+                                            Color(hex: "FFE5B4"),
+                                            Color(hex: "FFD700"),
+                                            Color(hex: "FFFF00")
                                         ],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -153,73 +153,64 @@ struct EventListItem: View {
                         case "Charity":
                             // Modern charity icon with hand and heart
                             ZStack {
-                                // Heart floating above hand
                                 Image(systemName: "heart.fill")
-                                    .font(.system(size: 16))
+                                    .font(.system(size: 14))
                                     .foregroundColor(.white)
-                                    .offset(y: -8)  // Position heart above hand
+                                    .offset(y: -6)
                                 
-                                // Open hand reaching up
                                 Image(systemName: "hand.raised.fill")
-                                    .font(.system(size: 24))
+                                    .font(.system(size: 20))
                                     .foregroundColor(.white)
-                                    .offset(y: 4)  // Position hand slightly lower
+                                    .offset(y: 3)
                             }
                             
                         case "Community":
                             // Modern community icon with three people
                             Image(systemName: "person.3.fill")
-                                .font(.system(size: 24))
+                                .font(.system(size: 20))
                                 .foregroundColor(.white)
                             
                         case "Workshops":
                             // Modern workshops icon with gears
                             ZStack {
-                                // Large gear in background
                                 Image(systemName: "gear")
-                                    .font(.system(size: 32))
+                                    .font(.system(size: 26))
                                     .foregroundColor(.white)
-                                    .rotationEffect(.degrees(22.5))  // Rotate for better tooth alignment
+                                    .rotationEffect(.degrees(22.5))
                                 
-                                // Smaller gear overlapping
                                 Image(systemName: "gear")
-                                    .font(.system(size: 20))
-                                    .foregroundColor(.white)
-                                    .offset(x: 8, y: 8)  // Position in bottom right
-                                    .rotationEffect(.degrees(-22.5))  // Counter-rotate
-                                
-                                // Tools in center
-                                Image(systemName: "wrench.and.screwdriver")
                                     .font(.system(size: 16))
                                     .foregroundColor(.white)
-                                    .offset(x: -2, y: -2)  // Position slightly up and left
+                                    .offset(x: 6, y: 6)
+                                    .rotationEffect(.degrees(-22.5))
+                                
+                                Image(systemName: "wrench.and.screwdriver")
+                                    .font(.system(size: 14))
+                                    .foregroundColor(.white)
+                                    .offset(x: -2, y: -2)
                             }
                             
                         case "Family Fun":
                             // Family group icon
                             ZStack {
-                                // Adult figures
                                 Image(systemName: "figure.stand")
-                                    .font(.system(size: 24))
-                                    .foregroundColor(.white)
-                                    .offset(x: -8)
-                                
-                                Image(systemName: "figure.dress")
-                                    .font(.system(size: 24))
-                                    .foregroundColor(.white)
-                                
-                                // Child figure
-                                Image(systemName: "figure.child")
                                     .font(.system(size: 20))
                                     .foregroundColor(.white)
-                                    .offset(x: 8)
+                                    .offset(x: -6)
+                                
+                                Image(systemName: "figure.dress")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                
+                                Image(systemName: "figure.child")
+                                    .font(.system(size: 16))
+                                    .foregroundColor(.white)
+                                    .offset(x: 6)
                             }
-                            
-                        // Add more cases for other categories...
                             
                         default:
                             Image(systemName: categoryItem?.icon ?? "circle.fill")
-                                .font(.system(size: 24))
+                                .font(.system(size: 20))
                                 .foregroundColor(.white)
                         }
                     }
@@ -230,28 +221,33 @@ struct EventListItem: View {
                 Text(event.name)
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(.white)
-                    .lineLimit(2)  // Allow up to 2 lines
-                    .fixedSize(horizontal: false, vertical: true)  // Enable proper wrapping
-                    .multilineTextAlignment(.leading)  // Align text to the left
+                    .lineLimit(2)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .multilineTextAlignment(.leading)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
-                Text(event.location.name)
+                Text(event.location.fullAddress)
                     .font(.system(size: 16))
                     .foregroundColor(.gray)
                     .lineLimit(1)
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 
                 Text(event.date)
                     .font(.system(size: 14))
                     .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, alignment: .leading)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
             
             Spacer()
             
             Image(systemName: "chevron.right")
                 .foregroundColor(.gray)
-                .font(.system(size: 16))
+                .font(.system(size: 14))
+                .padding(.trailing, 4) // Add padding to prevent chevron from being cut off
         }
         .padding()
         .background(Color(.systemGray6).opacity(0.1))
         .cornerRadius(12)
     }
-} 
+}

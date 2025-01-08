@@ -28,53 +28,53 @@ struct DiscoverScreen: View {
     
     // Sample categories with their respective icons
     let categoryItems = [
-        CategoryItem(name: "Sports", 
-                    icon: "figure.run", 
-                    color: Color(hex: "4169E1")),  // Royal Blue
-        
-        CategoryItem(name: "Markets", 
-                    icon: "leaf.fill", 
-                    color: Color(hex: "32CD32")),  // Lime green
-        
         CategoryItem(name: "Arts & Culture", 
                     icon: "paintpalette.fill", 
                     color: Color(hex: "FF4500")),  // Vibrant orange-red
         
-        CategoryItem(name: "Community", 
-                    icon: "person.3.fill", 
-                    color: Color(hex: "20B2AA")),  // Light Sea Green
-                    
-        CategoryItem(name: "Nightlife", 
-                    icon: "moon.stars.fill", 
-                    color: Color(hex: "191970")),  // Midnight blue
-        
-        CategoryItem(name: "Music & Concerts", 
-                    icon: "music.note.list", 
-                    color: Color(hex: "8A2BE2")),  // Electric purple
-        
-        CategoryItem(name: "Food & Drinks", 
-                    icon: "fork.knife", 
-                    color: Color(hex: "FF8C00")),  // Changed to match the orange color
+        CategoryItem(name: "Charity", 
+                    icon: "hand.raised.fill", 
+                    color: Color(hex: "9370DB")),   // Medium purple
         
         CategoryItem(name: "Comedy", 
                     icon: "face.smiling.fill", 
                     color: Color(hex: "FFD700")),  // Golden yellow
         
+        CategoryItem(name: "Community", 
+                    icon: "person.3.fill", 
+                    color: Color(hex: "20B2AA")),  // Light Sea Green
+                    
+        CategoryItem(name: "Family Fun", 
+                    icon: "figure.2.and.child", 
+                    color: Color(hex: "00CED1")),  // Turquoise
+        
+        CategoryItem(name: "Food & Drinks", 
+                    icon: "fork.knife", 
+                    color: Color(hex: "FF8C00")),  // Orange
+        
+        CategoryItem(name: "Markets", 
+                    icon: "leaf.fill", 
+                    color: Color(hex: "32CD32")),  // Lime green
+        
+        CategoryItem(name: "Music & Concerts", 
+                    icon: "music.note.list", 
+                    color: Color(hex: "8A2BE2")),  // Electric purple
+        
+        CategoryItem(name: "Nightlife", 
+                    icon: "moon.stars.fill", 
+                    color: Color(hex: "191970")),  // Midnight blue
+        
+        CategoryItem(name: "Sports", 
+                    icon: "figure.run", 
+                    color: Color(hex: "4169E1")),  // Royal Blue
+        
         CategoryItem(name: "Theater", 
                     icon: "theatermasks.fill", 
                     color: Color(hex: "DC143C")),  // Crimson red
         
-        CategoryItem(name: "Family Fun", 
-                    icon: "figure.2.and.child", 
-                    color: Color(hex: "00CED1")),  // Keep Turquoise
-        
         CategoryItem(name: "Workshops", 
                     icon: "hammer.fill", 
-                    color: Color(hex: "D2691E")),  // Changed to Chocolate brown
-        
-        CategoryItem(name: "Charity", 
-                    icon: "hand.raised.fill", 
-                    color: Color(hex: "9370DB"))   // Medium purple
+                    color: Color(hex: "D2691E"))   // Chocolate brown
     ]
     
     var filteredEvents: [Event] {
@@ -105,7 +105,7 @@ struct DiscoverScreen: View {
                         VStack(spacing: 24) {
                             // Title
                             Text("Discover")
-                                .font(.system(size: 40, weight: .bold))
+                                .font(.system(size: 48, weight: .bold))
                                 .frame(maxWidth: .infinity, alignment: .center)
                                 .padding(.top, -8)
                             

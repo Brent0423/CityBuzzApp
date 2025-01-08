@@ -133,10 +133,12 @@ struct HomeScreen: View {
             ScrollView {
                 VStack(spacing: 24) {
                     Text("City Buzz")
-                        .font(.system(size: 40, weight: .bold))
-                        .frame(maxWidth: .infinity, alignment: .center)
+                        .font(.system(size: 48, weight: .bold))
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.top, -8)
-                    
+                        .padding(.horizontal, 20)
+                        .foregroundColor(.white)
+                        .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 3)
                     // Search Bar
                     HStack {
                         Image(systemName: "magnifyingglass")
@@ -244,31 +246,35 @@ struct FeaturedEventCard: View {
                     .fill(LinearGradient(colors: gradient, startPoint: .topLeading, endPoint: .bottomTrailing))
                     .frame(height: 160)
                 
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 8) {
                     Text(event.name)
-                        .font(.system(size: 20, weight: .semibold))
+                        .font(.system(size: 24, weight: .bold))
                         .foregroundColor(.white)
                         .lineLimit(2)
                         .fixedSize(horizontal: false, vertical: true)
                         .multilineTextAlignment(.leading)
                     
-                    HStack {
-                        Image(systemName: "calendar")
-                            .font(.system(size: 14))
-                        Text(event.date)
-                            .font(.system(size: 14))
+                    HStack(spacing: 12) {
+                        HStack(spacing: 6) {
+                            Image(systemName: "calendar")
+                                .font(.system(size: 16))
+                            Text(event.date)
+                                .font(.system(size: 16))
+                        }
                         
-                        Image(systemName: "mappin")
-                            .font(.system(size: 14))
-                        Text(event.location.name)
-                            .font(.system(size: 14))
-                            .lineLimit(1)
+                        HStack(spacing: 6) {
+                            Image(systemName: "mappin")
+                                .font(.system(size: 16))
+                            Text(event.location.name)
+                                .font(.system(size: 16))
+                                .lineLimit(1)
+                        }
                     }
                     .foregroundColor(.white.opacity(0.9))
                 }
                 .padding()
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .background(LinearGradient(colors: [.black.opacity(0.7), .clear], startPoint: .bottom, endPoint: .top))
+                .background(LinearGradient(colors: [.black.opacity(0.8), .clear], startPoint: .bottom, endPoint: .top))
             }
         }
         .frame(width: 280)
