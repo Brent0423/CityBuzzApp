@@ -4,6 +4,7 @@ import SwiftUI
 // Event model will be shared from HomeScreen.swift
 
 struct DiscoverScreen: View {
+    @StateObject private var eventManager = EventManager.shared
     @State private var selectedCategories: Set<String> = []
     @State private var searchText = ""
     @State private var isLoading = false
@@ -29,7 +30,7 @@ struct DiscoverScreen: View {
     let categoryItems = [
         CategoryItem(name: "Sports", 
                     icon: "figure.run", 
-                    color: Color(hex: "4169E1")),  // Royal blue
+                    color: Color(hex: "4169E1")),  // Royal Blue
         
         CategoryItem(name: "Markets", 
                     icon: "leaf.fill", 
@@ -41,7 +42,7 @@ struct DiscoverScreen: View {
         
         CategoryItem(name: "Community", 
                     icon: "person.3.fill", 
-                    color: Color(hex: "20B2AA")),  // Light sea green
+                    color: Color(hex: "20B2AA")),  // Light Sea Green
                     
         CategoryItem(name: "Nightlife", 
                     icon: "moon.stars.fill", 
@@ -53,7 +54,7 @@ struct DiscoverScreen: View {
         
         CategoryItem(name: "Food & Drinks", 
                     icon: "fork.knife", 
-                    color: Color(hex: "FF6B6B")),  // Appetizing red
+                    color: Color(hex: "FF8C00")),  // Changed to match the orange color
         
         CategoryItem(name: "Comedy", 
                     icon: "face.smiling.fill", 
@@ -64,12 +65,12 @@ struct DiscoverScreen: View {
                     color: Color(hex: "DC143C")),  // Crimson red
         
         CategoryItem(name: "Family Fun", 
-                    icon: "heart.fill", 
-                    color: Color(hex: "FF1493")),  // Deep pink
+                    icon: "figure.2.and.child", 
+                    color: Color(hex: "00CED1")),  // Keep Turquoise
         
         CategoryItem(name: "Workshops", 
                     icon: "hammer.fill", 
-                    color: Color(hex: "D2691E")),  // Chocolate brown
+                    color: Color(hex: "D2691E")),  // Changed to Chocolate brown
         
         CategoryItem(name: "Charity", 
                     icon: "hand.raised.fill", 
@@ -77,6 +78,7 @@ struct DiscoverScreen: View {
     ]
     
     var filteredEvents: [Event] {
+        let events = eventManager.getAllEvents()
         if searchText.isEmpty && selectedCategories.isEmpty {
             return events
         }
@@ -423,7 +425,7 @@ struct CategoryCard: View {
                         .fill(Color(hex: "FF8C00"))  // Dark orange background
                         .frame(width: 50, height: 50)
                         .overlay(
-                            Image(systemName: "fork.knife")  // Changed back to simple fork.knife
+                            Image(systemName: "fork.knife")
                                 .font(.system(size: 24))
                                 .foregroundColor(.black)  // Black icon
                         )
@@ -474,13 +476,13 @@ struct CategoryCard: View {
                 } else if category.name == "Community" {
                     // Modern community icon
                     Circle()
-                        .fill(Color(hex: "20B2AA"))  // Teal background
+                        .fill(Color(hex: "20B2AA"))  // Light Sea Green
                         .frame(width: 50, height: 50)
                         .overlay(
                             Image(systemName: "person.3.fill")
                                 .font(.system(size: 24))
-                                .foregroundColor(.white)  // White icon
-                                .offset(y: 2)  // Slight adjustment to center the icon better
+                                .foregroundColor(.white)
+                                .offset(y: 2)
                         )
                 } else if category.name == "Arts & Culture" {
                     // Modern paint palette icon
@@ -561,38 +563,33 @@ struct CategoryCard: View {
                                 .offset(y: 1)  // Slight adjustment to center the icon
                         )
                 } else if category.name == "Family Fun" {
-                    // Modern family icon like the reference
+                    // Family group icon
                     Circle()
                         .fill(Color(hex: "00CED1"))  // Turquoise background
                         .frame(width: 50, height: 50)
                         .overlay(
                             ZStack {
-                                // White line at bottom
-                                Rectangle()
-                                    .fill(Color.white)
-                                    .frame(width: 35, height: 1)
-                                    .offset(y: 12)
+                                // Adult figures
+                                Image(systemName: "figure.stand")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                    .offset(x: -8)
                                 
-                                // Family group icon - using custom arrangement
-                                HStack(spacing: 2) {
-                                    // Father figure
-                                    Image(systemName: "figure.stand")
-                                        .font(.system(size: 16))
-                                    // Child figure
-                                    Image(systemName: "figure.dress.line")
-                                        .font(.system(size: 12))
-                                    // Mother figure
-                                    Image(systemName: "figure.dress")
-                                        .font(.system(size: 16))
-                                }
-                                .foregroundColor(.white)
-                                .offset(y: -2)
+                                Image(systemName: "figure.dress")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                
+                                // Child figure
+                                Image(systemName: "figure.child")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                    .offset(x: 8)
                             }
                         )
                 } else if category.name == "Workshops" {
                     // Modern workshops icon with gear and tools
                     Circle()
-                        .fill(Color(hex: "FF8C00"))  // Orange background
+                        .fill(Color(hex: "D2691E"))  // Changed to Chocolate brown
                         .frame(width: 50, height: 50)
                         .overlay(
                             ZStack {

@@ -7,7 +7,7 @@ struct EventListItem: View {
     private let categoryItems = [
         CategoryItem(name: "Food & Drinks", 
                     icon: "fork.knife", 
-                    color: Color(hex: "FF6B6B")),
+                    color: Color(hex: "FF8C00")),
         CategoryItem(name: "Music & Concerts", 
                     icon: "music.note.list", 
                     color: Color(hex: "8A2BE2")),
@@ -25,7 +25,7 @@ struct EventListItem: View {
                     color: Color(hex: "2E8B57")),
         CategoryItem(name: "Sports", 
                     icon: "figure.run", 
-                    color: Color(hex: "1E90FF")),
+                    color: Color(hex: "4169E1")),
         CategoryItem(name: "Comedy", 
                     icon: "face.smiling.fill", 
                     color: Color(hex: "FFD700")),
@@ -37,7 +37,7 @@ struct EventListItem: View {
                     color: Color(hex: "00CED1")),
         CategoryItem(name: "Workshops", 
                     icon: "hammer.fill", 
-                    color: Color(hex: "FF8C00")),
+                    color: Color(hex: "D2691E")),
         CategoryItem(name: "Charity", 
                     icon: "hand.raised.fill", 
                     color: Color(hex: "9B2D86"))
@@ -60,7 +60,7 @@ struct EventListItem: View {
                             // Clean, modern food icon
                             Image(systemName: "fork.knife")
                                 .font(.system(size: 24))
-                                .foregroundColor(.white)
+                                .foregroundColor(.black)
                             
                         case "Music & Concerts":
                             // Modern music icon with radiating lines
@@ -193,6 +193,26 @@ struct EventListItem: View {
                                     .font(.system(size: 16))
                                     .foregroundColor(.white)
                                     .offset(x: -2, y: -2)  // Position slightly up and left
+                            }
+                            
+                        case "Family Fun":
+                            // Family group icon
+                            ZStack {
+                                // Adult figures
+                                Image(systemName: "figure.stand")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                    .offset(x: -8)
+                                
+                                Image(systemName: "figure.dress")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                
+                                // Child figure
+                                Image(systemName: "figure.child")
+                                    .font(.system(size: 20))
+                                    .foregroundColor(.white)
+                                    .offset(x: 8)
                             }
                             
                         // Add more cases for other categories...

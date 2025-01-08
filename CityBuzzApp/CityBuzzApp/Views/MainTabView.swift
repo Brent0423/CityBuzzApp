@@ -1,6 +1,7 @@
 import SwiftUI
 
 struct MainTabView: View {
+    @StateObject private var eventManager = EventManager.shared
     @State private var selectedTab: TabItem = .home
     @State private var homeStack = NavigationPath()
     
