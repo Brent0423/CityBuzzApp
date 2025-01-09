@@ -1,265 +1,381 @@
     import SwiftUI
     import MapKit
     import CoreLocation
+    import EventKit
     
     struct EventDetailScreen: View {
         @Environment(\.dismiss) var dismiss
         @Environment(\.colorScheme) var colorScheme
+        @Binding var homeStack: NavigationPath
         let event: Event
         @State private var showingMap = false
         @State private var animateContent = false
+        @State private var showingCalendarAlert = false
         
         var body: some View {
-            VStack(spacing: 0) {
-                // Back Button
+            ZStack(alignment: .top) {
+                ScrollView {
+                    VStack(spacing: 0) {
+                        // Hero Section
+                        ZStack(alignment: .bottom) {
+                            // Refined Category Icon
+                            VStack(spacing: 16) {
+                                // Category Icon
+                                Circle()
+                                    .fill(Color(hex: categoryColors[event.category]  ?? "4ECDC4"))
+                                    .frame(width: 150, height: 150)
+                                    .overlay(
+                                        Group {
+                                            switch event.category {
+                                            case "Food & Drinks":
+                                                Image(systemName: "fork.knife")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(.black)
+                                                    
+                                            case "Music & Concerts":
+                                                ZStack {
+                                                    // Radiating lines
+                                                    ForEach(0..<48) { index in
+                                                        Rectangle()
+                                                            .fill(Color.white)
+                                                            .frame(width: 1.5, height: 15)
+                                                            .offset(y: -50)
+                                                            .rotationEffect(.degrees(Double(index) * 7.5))
+                                                    }
+                                                    
+                                                    Image(systemName: "music.note")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white)
+                                                }
+                                                
+                                            case "Sports":
+                                                ZStack {
+                                                    Rectangle()
+                                                        .fill(Color.white)
+                                                        .frame(width: 80, height: 1.5)
+                                                        .offset(y: 30)
+                                                    
+                                                    Image(systemName: "figure.run")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white)
+                                                        .offset(y: -5)
+                                                }
+                                                
+                                            case "Comedy":
+                                                Circle()
+                                                    .fill(Color(hex: "FFD700"))  // Golden yellow background
+                                                    .frame(width: 150, height: 150)
+                                                    .overlay(
+                                                        Image(systemName: "face.smiling.fill")
+                                                            .font(.system(size: 60))
+                                                            .foregroundStyle(
+                                                                Color.black.opacity(0.8)
+                                                            )
+                                                            .offset(y: 2)
+                                                    )
+                                                
+                                            case "Arts & Culture":
+                                                Image(systemName: "paintpalette.fill")
+                                                    .font(.system(size: 50))
+                                                    .foregroundStyle(
+                                                        .linearGradient(
+                                                            colors: [
+                                                                Color(hex: "FF0000"),
+                                                                Color(hex: "4169E1"),
+                                                                Color(hex: "FFD700"),
+                                                                Color(hex: "32CD32"),
+                                                                Color(hex: "FF1493"),
+                                                                Color(hex: "9370DB")
+                                                            ],
+                                                            startPoint: .topLeading,
+                                                            endPoint: .bottomTrailing
+                                                        )
+                                                    )
+                                                
+                                            case "Markets":
+                                                Image(systemName: "leaf.fill")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(.white)
+                                                    .rotationEffect(.degrees(-45))
+                                                
+                                            case "Nightlife":
+                                                Image(systemName: "moon.stars.fill")
+                                                    .font(.system(size: 50))
+                                                    .foregroundStyle(
+                                                        .linearGradient(
+                                                            colors: [
+                                                                Color(hex: "FFF4E3"),
+                                                                Color(hex: "FFE5B4"),
+                                                                Color(hex: "FFD700"),
+                                                                Color(hex: "FFFF00")
+                                                            ],
+                                                            startPoint: .topLeading,
+                                                            endPoint: .bottomTrailing
+                                                        )
+                                                    )
+                                                
+                                            case "Charity":
+                                                ZStack {
+                                                    Image(systemName: "heart.fill")
+                                                        .font(.system(size: 35))
+                                                        .foregroundColor(.white)
+                                                        .offset(y: -15)
+                                                    
+                                                    Image(systemName: "hand.raised.fill")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white)
+                                                        .offset(y: 7)
+                                                }
+                                                
+                                            case "Community":
+                                                Image(systemName: "person.3.fill")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(.white)
+                                                
+                                            case "Workshops":
+                                                ZStack {
+                                                    Image(systemName: "gear")
+                                                        .font(.system(size: 65))
+                                                        .foregroundColor(.white)
+                                                        .rotationEffect(.degrees(22.5))
+                                                    
+                                                    Image(systemName: "gear")
+                                                        .font(.system(size: 40))
+                                                        .foregroundColor(.white)
+                                                        .offset(x: 15, y: 15)
+                                                        .rotationEffect(.degrees(-22.5))
+                                                    
+                                                    Image(systemName: "wrench.and.screwdriver")
+                                                        .font(.system(size: 35))
+                                                        .foregroundColor(.white)
+                                                        .offset(x: -5, y: -5)
+                                                }
+                                                
+                                            case "Family Fun":
+                                                ZStack {
+                                                    Image(systemName: "figure.stand")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white)
+                                                        .offset(x: -15)
+                                                    
+                                                    Image(systemName: "figure.dress")
+                                                        .font(.system(size: 50))
+                                                        .foregroundColor(.white)
+                                                    
+                                                    Image(systemName: "figure.child")
+                                                        .font(.system(size: 40))
+                                                        .foregroundColor(.white)
+                                                        .offset(x: 15)
+                                                }
+                                                
+                                            case "Theater":
+                                                Image(systemName: "theatermasks.fill")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(.white)
+                                                
+                                            default:
+                                                Image(systemName: categoryIcons[event.category] ?? "star.fill")
+                                                    .font(.system(size: 50))
+                                                    .foregroundColor(.white)
+                                            }
+                                        }
+                                    )
+                                    .background(
+                                        Circle()
+                                            .fill(.ultraThinMaterial)
+                                            .shadow(color: .black.opacity(0.2), radius: 15, x: 0, y: 5)
+                                    )
+                                    .overlay(
+                                        Circle()
+                                            .stroke(.white.opacity(0.3), lineWidth: 1)
+                                    )
+                                    .padding(.top, 24)
+                                    .scaleEffect(animateContent ? 1 : 0.8)
+                                    .opacity(animateContent ? 1 : 0)
+                                
+                                // Refined Title & Category
+                                VStack(spacing: 6) {
+                                    Text(event.name)
+                                        .font(.system(size: 24, weight: .bold))
+                                        .foregroundColor(.white)
+                                        .multilineTextAlignment(.center)
+                                        .padding(.horizontal)
+                                        .shadow(color: .black.opacity(0.3), radius: 4, y: 2)
+                                    
+                                    Text(event.category)
+                                        .font(.system(size: 14, weight: .medium))
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 12)
+                                        .padding(.vertical, 6)
+                                        .background(
+                                            Capsule()
+                                                .fill(.ultraThinMaterial)
+                                                .shadow(color: .black.opacity(0.15), radius: 8, y: 2)
+                                        )
+                                }
+                                .padding(.bottom, 6)
+                                .offset(y: animateContent ? 0 : 20)
+                                .opacity(animateContent ? 1 : 0)
+                            }
+                        }
+                        
+                        // Event Details
+                        VStack(spacing: 2) {
+                            // Date & Time Card
+                            DetailCard(title: "Date & Time") {
+                                Button(action: {
+                                    addEventToCalendar()
+                                }) {
+                                    HStack {
+                                        Image(systemName: "calendar")
+                                            .font(.system(size: 24, weight: .light))
+                                            .foregroundColor(Color(hex: "4ECDC4"))
+                                            .symbolEffect(.bounce, value: animateContent)
+                                        
+                                        VStack(alignment: .leading) {
+                                            Text(formatDateDescription(event.date))
+                                                .font(.system(size: 18))
+                                                .foregroundColor(.primary.opacity(0.8))
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "plus.circle")
+                                            .foregroundColor(Color(hex: "4ECDC4"))
+                                            .font(.system(size: 20))
+                                            .frame(width: 24, height: 24)
+                                            .offset(y: 2)
+                                            .shadow(color: Color(hex: "4ECDC4").opacity(0.5), radius: 5)
+                                            .symbolEffect(.pulse, value: animateContent)
+                                    }
+                                }
+                            }
+                            .alert("Add to Calendar", isPresented: $showingCalendarAlert) {
+                                Button("Cancel", role: .cancel) { }
+                                Button("Add") {
+                                    requestCalendarAccess()
+                                }
+                            } message: {
+                                Text("Would you like to add this event to your calendar?")
+                            }
+                            .transition(.move(edge: .leading))
+                            
+                            // Location Card
+                            DetailCard(title: "Location") {
+                                Button(action: { 
+                                    openInMaps()
+                                }) {
+                                    HStack(spacing: 12) {
+                                        Image(systemName: "mappin.circle.fill")
+                                            .font(.system(size: 24, weight: .light))
+                                            .foregroundColor(Color(hex: "FF6B6B"))
+                                            .symbolEffect(.pulse, value: animateContent)
+                                        
+                                        VStack(alignment: .leading, spacing: 6) {
+                                            Text(event.location.name)
+                                                .font(.system(size: 20, weight: .semibold))
+                                                .foregroundColor(.primary)
+                                                .multilineTextAlignment(.leading)
+                                            
+                                            VStack(alignment: .leading, spacing: 2) {
+                                                Text(event.location.streetAddress)  // Street address
+                                                    .font(.system(size: 14))
+                                                    .foregroundColor(.secondary)
+                                                    .multilineTextAlignment(.leading)
+                                                
+                                                Text("\(event.location.city), MI \(event.location.fullAddress.components(separatedBy: " ").last ?? "")")  // City, State ZIP
+                                                    .font(.system(size: 14))
+                                                    .foregroundColor(.secondary)
+                                                    .multilineTextAlignment(.leading)
+                                            }
+                                        }
+                                        
+                                        Spacer()
+                                        
+                                        Image(systemName: "chevron.right")
+                                            .foregroundColor(Color(hex: "FF6B6B"))
+                                            .font(.system(size: 20))
+                                            .frame(width: 24, height: 24)
+                                            .offset(y: 2)
+                                            .shadow(color: Color(hex: "FF6B6B").opacity(0.5), radius: 5)
+                                            .symbolEffect(.pulse, value: animateContent)
+                                    }
+                                }
+                            }
+                            .transition(.move(edge: .trailing))
+                            
+                            // Description Card (if available)
+                            if let description = event.description {
+                                DetailCard(title: "Description") {
+                                    Text(description)
+                                        .font(.system(size: 16))
+                                        .foregroundColor(.primary.opacity(0.8))
+                                        .lineSpacing(4)
+                                }
+                                .transition(.move(edge: .trailing))
+                                .padding(.bottom, 12)
+                            }
+                        }
+                        .padding(20)
+                    }
+                    .padding(.top, 60) // Add padding for the sticky header
+                }
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarBackButtonHidden(true)
+                .sheet(isPresented: $showingMap) {
+                    MapView(coordinate: CLLocationCoordinate2D(
+                        latitude: event.location.coordinate.latitude,
+                        longitude: event.location.coordinate.longitude
+                    ))
+                    .edgesIgnoringSafeArea(.all)
+                }
+                .onAppear {
+                    withAnimation(.easeOut(duration: 0.8)) {
+                        animateContent = true
+                    }
+                }
+                
+                // Sticky Header
                 HStack {
-                    Button(action: { dismiss() }) {
+                    Button(action: { 
+                        homeStack.removeLast(homeStack.count)
+                    }) {
                         HStack(spacing: 6) {
-                            Image(systemName: "chevron.left")
-                                .font(.system(size: 14, weight: .semibold))
-                            Text("Back")
+                            Image(systemName: "house.fill")
+                            Text("Home")
                                 .font(.system(size: 16, weight: .medium))
                         }
                         .foregroundColor(.primary)
                     }
                     .padding(.leading)
+                    
                     Spacer()
+                    
+                    Button(action: {
+                        let shareText = "\(event.name)\nDate: \(event.date)\nLocation: \(event.location.name)"
+                        let av = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+                        if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                           let window = windowScene.windows.first {
+                            window.rootViewController?.present(av, animated: true)
+                        }
+                    }) {
+                        Image(systemName: "square.and.arrow.up")
+                            .font(.system(size: 20, weight: .medium))
+                            .foregroundColor(.primary)
+                    }
+                    .padding(.trailing)
                 }
                 .padding(.top, 8)
-                
-                // Hero Section
-                ZStack(alignment: .bottom) {
-                    // Elegant Gradient Background
-                    Rectangle()
-                        .fill(LinearGradient(
-                            colors: [
-                                Color(hex: categoryColors[event.category] ?? "4ECDC4").opacity(0.9),
-                                Color(hex: colorScheme == .dark ? "1A1A1A" : "FAFAFA")
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        ))
-                        .frame(height: 320)
-                        .overlay(
-                            Color.black.opacity(0.2) // Subtle overlay for depth
-                        )
-                    
-                    // Refined Category Icon
-                    VStack(spacing: 20) {
-                        // Category Icon
-                        Circle()
-                            .fill(Color(hex: categoryColors[event.category] ?? "4ECDC4"))
-                            .frame(width: 110, height: 110)
-                            .overlay(
-                                Group {
-                                    switch event.category {
-                                    case "Food & Drinks":
-                                        Image(systemName: "fork.knife")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(.black)
-                                            
-                                    case "Music & Concerts":
-                                        ZStack {
-                                            ForEach(0..<48) { index in
-                                                Rectangle()
-                                                    .fill(Color.white)
-                                                    .frame(width: 2, height: 12)
-                                                    .offset(y: -40)
-                                                    .rotationEffect(.degrees(Double(index) * 7.5))
-                                            }
-                                            
-                                            Image(systemName: "music.note")
-                                                .font(.system(size: 50))
-                                                .foregroundColor(.white)
-                                        }
-                                        
-                                    case "Nightlife":
-                                        Image(systemName: "moon.stars.fill")
-                                            .font(.system(size: 50))
-                                            .foregroundStyle(
-                                                .linearGradient(
-                                                    colors: [
-                                                        Color(hex: "FFF4E3"),
-                                                        Color(hex: "FFE5B4"),
-                                                        Color(hex: "FFD700"),
-                                                        Color(hex: "FFFF00")
-                                                    ],
-                                                    startPoint: .topLeading,
-                                                    endPoint: .bottomTrailing
-                                                )
-                                            )
-                                        
-                                    // Add all other cases from EventListItem.swift...
-                                    default:
-                                        Image(systemName: categoryIcons[event.category] ?? "star.fill")
-                                            .font(.system(size: 50))
-                                            .foregroundColor(.white)
-                                    }
-                                }
-                            )
-                            .background(
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                                    .shadow(color: .black.opacity(0.2), radius: 15, x: 0, y: 5)
-                            )
-                            .overlay(
-                                Circle()
-                                    .stroke(.white.opacity(0.3), lineWidth: 1)
-                            )
-                            .scaleEffect(animateContent ? 1 : 0.8)
-                            .opacity(animateContent ? 1 : 0)
-                        
-                        // Refined Title & Category
-                        VStack(spacing: 16) {
-                            Text(event.name)
-                                .font(.system(size: 34, weight: .bold))
-                                .foregroundColor(.white)
-                                .multilineTextAlignment(.center)
-                                .padding(.horizontal)
-                                .shadow(color: .black.opacity(0.3), radius: 4, y: 2)
-                            
-                            Text(event.category)
-                                .font(.system(size: 16, weight: .medium))
-                                .foregroundColor(.white)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 10)
-                                .background(
-                                    Capsule()
-                                        .fill(.ultraThinMaterial)
-                                        .shadow(color: .black.opacity(0.15), radius: 8, y: 2)
-                                )
-                        }
-                        .padding(.bottom, 32)
-                        .offset(y: animateContent ? 0 : 20)
-                        .opacity(animateContent ? 1 : 0)
-                    }
-                }
-                
-                // Event Details
-                VStack(spacing: 28) {
-                    // Date & Time Card
-                    DetailCard(title: "Date & Time") {
-                        HStack {
-                            Image(systemName: "calendar")
-                                .font(.system(size: 24, weight: .light))
-                                .foregroundColor(Color(hex: "4ECDC4"))
-                                .symbolEffect(.bounce, value: animateContent)
-                            
-                            VStack(alignment: .leading) {
-                                Text(formatDateDescription(event.date))
-                                    .font(.system(size: 18))
-                                    .foregroundColor(.primary.opacity(0.8))
-                            }
-                        }
-                    }
-                    .transition(.move(edge: .leading))
-                    
-                    // Location Card
-                    DetailCard(title: "Location") {
-                        Button(action: { 
-                            withAnimation(.spring()) {
-                                showingMap = true 
-                            }
-                        }) {
-                            HStack {
-                                Image(systemName: "mappin.circle.fill")
-                                    .font(.system(size: 24, weight: .light))
-                                    .foregroundColor(Color(hex: "FF6B6B"))
-                                    .symbolEffect(.pulse, value: animateContent)
-                                
-                                VStack(alignment: .leading, spacing: 6) {
-                                    Text(event.location.name)
-                                        .font(.system(size: 20, weight: .semibold))
-                                        .foregroundColor(.primary)
-                                    Text(event.location.fullAddress)
-                                        .font(.system(size: 14))
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .foregroundColor(.secondary)
-                                    .font(.system(size: 14, weight: .semibold))
-                            }
-                        }
-                    }
-                    .transition(.move(edge: .trailing))
-                    .padding(.bottom, 20)
-                    
-                    HStack(spacing: 16) {
-                        // Share Button
-                        Button(action: shareEvent) {
-                            HStack(spacing: 12) {
-                                Image(systemName: "square.and.arrow.up")
-                                    .font(.system(size: 16, weight: .semibold))
-                                Text("Share Event")
-                                    .font(.system(size: 16, weight: .semibold))
-                            }
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 16)
-                            .background(
-                                LinearGradient(
-                                    colors: [Color(hex: "4A90E2"), Color(hex: "357ABD")],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                )
-                            )
-                            .cornerRadius(16)
-                            .shadow(color: Color(hex: "4A90E2").opacity(0.3), radius: 8, y: 4)
-                        }
-                        .buttonStyle(SpringButtonStyle())
-                    }
-                    .padding(.bottom, 40)
-                }
-                .padding(24)
-            }
-            .navigationBarTitleDisplayMode(.inline)
-            .navigationBarBackButtonHidden(true)
-            .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    Button(action: shareEvent) {
-                        Image(systemName: "square.and.arrow.up")
-                            .font(.system(size: 16, weight: .medium))
-                    }
-                }
-            }
-            .sheet(isPresented: $showingMap) {
-                MapView(coordinate: CLLocationCoordinate2D(
-                ))
-                .edgesIgnoringSafeArea(.all)
-            }
-            .onAppear {
-                withAnimation(.easeOut(duration: 0.8)) {
-                    animateContent = true
-                }
-            }
-        }
-        
-        private func shareEvent() {
-            let eventText = """
-            Check out this event!
-            
-            \(event.name)
-            📅 \(formatDateDescription(event.date))
-            📍 \(event.location.name)
-            \(event.location.fullAddress)
-            """
-            
-            let activityVC = UIActivityViewController(
-                activityItems: [eventText],
-                applicationActivities: nil
-            )
-            
-            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
-               let window = windowScene.windows.first,
-               let rootVC = window.rootViewController {
-                rootVC.present(activityVC, animated: true)
+                .padding(.bottom, 16)
+                .background(.ultraThinMaterial)
             }
         }
         
         private func formatDateDescription(_ dateString: String) -> String {
+            // Since our dates are in format "1/13 @ 11 AM", let's just return it directly
+            return dateString
+            
+            /* Remove or comment out the old implementation
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
             
@@ -269,6 +385,95 @@
             
             dateFormatter.dateFormat = "EEEE, MMMM d 'at' h:mm a"
             return dateFormatter.string(from: date)
+            */
+        }
+        
+        private func addEventToCalendar() {
+            showingCalendarAlert = true
+        }
+        
+        private func requestCalendarAccess() {
+            let eventStore = EKEventStore()
+            
+            if #available(iOS 17.0, *) {
+                Task {
+                    do {
+                        try await eventStore.requestFullAccessToEvents()
+                        await createCalendarEvent(store: eventStore)
+                    } catch {
+                        print("Failed to request calendar access: \(error)")
+                    }
+                }
+            } else {
+                eventStore.requestAccess(to: .event) { granted, error in
+                    if granted {
+                        createCalendarEvent(store: eventStore)
+                    }
+                }
+            }
+        }
+        
+        private func createCalendarEvent(store: EKEventStore) {
+            let calendarEvent = EKEvent(eventStore: store)
+            calendarEvent.title = event.name
+            calendarEvent.location = event.location.fullAddress
+            
+            // Parse the date string to create start and end times
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "M/dd '@' h a"
+            
+            if let startDate = dateFormatter.date(from: event.date) {
+                calendarEvent.startDate = startDate
+                // Set end date to 2 hours after start by default
+                calendarEvent.endDate = startDate.addingTimeInterval(2 * 60 * 60)
+                
+                do {
+                    try store.save(calendarEvent, span: .thisEvent)
+                } catch {
+                    print("Failed to save event to calendar: \(error)")
+                }
+            }
+        }
+        
+        private func openInMaps() {
+            let address = event.location.fullAddress.replacingOccurrences(of: " ", with: "+")
+            
+            // Create URL for Apple Maps
+            let appleMapsURL = URL(string: "maps://?address=\(address)")
+            
+            // Create URL for Google Maps
+            let googleMapsURL = URL(string: "comgooglemaps://?q=\(address)")
+            
+            // Create fallback URL for Google Maps web
+            let googleMapsWebURL = URL(string: "https://www.google.com/maps/search/?api=1&query=\(address)")
+            
+            let alert = UIAlertController(title: "Open in Maps", message: "Choose your preferred maps application", preferredStyle: .actionSheet)
+            
+            // Add Apple Maps option
+            if let appleMapsURL = appleMapsURL, UIApplication.shared.canOpenURL(appleMapsURL) {
+                alert.addAction(UIAlertAction(title: "Apple Maps", style: .default) { _ in
+                    UIApplication.shared.open(appleMapsURL)
+                })
+            }
+            
+            // Add Google Maps option
+            if let googleMapsURL = googleMapsURL, UIApplication.shared.canOpenURL(googleMapsURL) {
+                alert.addAction(UIAlertAction(title: "Google Maps", style: .default) { _ in
+                    UIApplication.shared.open(googleMapsURL)
+                })
+            } else if let googleMapsWebURL = googleMapsWebURL {
+                alert.addAction(UIAlertAction(title: "Google Maps", style: .default) { _ in
+                    UIApplication.shared.open(googleMapsWebURL)
+                })
+            }
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            
+            // Present the alert
+            if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+               let viewController = windowScene.windows.first?.rootViewController {
+                viewController.present(alert, animated: true)
+            }
         }
     }
     
@@ -326,7 +531,7 @@
     // Category Icons and Colors - Update to match DiscoverScreen
     private let categoryIcons = [
         "Food & Drinks": "fork.knife",
-        "Music & Concerts": "music.note",
+        "Music & Concerts": "music.note.list",
         "Nightlife": "moon.stars.fill",
         "Community": "person.3.fill",
         "Arts & Culture": "paintpalette.fill",
@@ -334,22 +539,88 @@
         "Sports": "figure.run",
         "Comedy": "face.smiling.fill",
         "Theater": "theatermasks.fill",
-        "Family Fun": "figure.2.and.child.holdinghands",
+        "Family Fun": "figure.2.and.child",
         "Workshops": "hammer.fill",
-        "Charity": "heart.fill"
+        "Charity": "hand.raised.fill"
     ]
     
     private let categoryColors = [
         "Food & Drinks": "FF8C00",
         "Music & Concerts": "8A2BE2",
-        "Nightlife": "191970",
+        "Nightlife": "000000",
         "Community": "20B2AA",
         "Arts & Culture": "FF4500",
-        "Markets": "32CD32",
+        "Markets": "2E8B57",
         "Sports": "4169E1",
         "Comedy": "FFD700",
-        "Theater": "DC143C",
+        "Theater": "800020",
         "Family Fun": "00CED1",
         "Workshops": "D2691E",
-        "Charity": "9370DB"
+        "Charity": "9B2D86"
     ]
+
+#Preview {
+    EventDetailScreen(
+        homeStack: .constant(NavigationPath()),
+        event: Event(
+            name: "Food Truck Rally",
+            date: "1/13 @ 11 AM",
+            location: Location(
+                name: "Bronson Park",
+                area: "Downtown",
+                city: "Kalamazoo",
+                fullAddress: "200 S Rose St, Kalamazoo, MI 49007",
+                latitude: 42.2916,
+                longitude: -85.5859
+            ),
+            category: "Food & Drinks",
+            description: "Join us for a delicious gathering of Kalamazoo's best food trucks featuring local cuisine and street food favorites."
+        )
+    )
+    .preferredColorScheme(.dark)
+}
+
+// Alternative preview with multiple color schemes
+struct EventDetailScreen_Previews: PreviewProvider {
+    static var previews: some View {
+        Group {
+            EventDetailScreen(
+                homeStack: .constant(NavigationPath()),
+                event: Event(
+                    name: "Food Truck Rally",
+                    date: "1/13 @ 11 AM",
+                    location: Location(
+                        name: "Bronson Park",
+                        area: "Downtown",
+                        city: "Kalamazoo",
+                        fullAddress: "200 S Rose St, Kalamazoo, MI 49007",
+                        latitude: 42.2916,
+                        longitude: -85.5859
+                    ),
+                    category: "Food & Drinks",
+                    description: "Join us for a delicious gathering of Kalamazoo's best food trucks featuring local cuisine and street food favorites."
+                )
+            )
+            .preferredColorScheme(.dark)
+            
+            EventDetailScreen(
+                homeStack: .constant(NavigationPath()),
+                event: Event(
+                    name: "Food Truck Rally",
+                    date: "1/13 @ 11 AM",
+                    location: Location(
+                        name: "Bronson Park",
+                        area: "Downtown",
+                        city: "Kalamazoo",
+                        fullAddress: "200 S Rose St, Kalamazoo, MI 49007",
+                        latitude: 42.2916,
+                        longitude: -85.5859
+                    ),
+                    category: "Food & Drinks",
+                    description: "Join us for a delicious gathering of Kalamazoo's best food trucks featuring local cuisine and street food favorites."
+                )
+            )
+            .preferredColorScheme(.light)
+        }
+    }
+}

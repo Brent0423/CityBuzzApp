@@ -126,7 +126,8 @@ struct PostEventScreen: View {
                 name: eventTitle,
                 date: formattedDate,
                 location: location,
-                category: selectedCategory
+                category: selectedCategory,
+                description: description
             )
             
             // Here you would typically save the event to your data store

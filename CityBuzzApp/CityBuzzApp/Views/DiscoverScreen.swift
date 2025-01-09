@@ -15,6 +15,7 @@ struct DiscoverScreen: View {
     @State private var events: [Event] = []
     @State private var showScrollToTop = false
     @State private var scrollOffset: CGFloat = 0
+    @Binding var homeStack: NavigationPath
     @Namespace private var scrollSpace
     
     // Cache selected categories
@@ -196,7 +197,7 @@ struct DiscoverScreen: View {
                                         LazyVStack(spacing: 10) {
                                             ForEach(filteredEvents) { event in
                                                 NavigationLink(value: event.id.uuidString) {
-                                                    EventListItem(event: event)
+                                                    EventListItem(event: event, homeStack: $homeStack)
                                                 }
                                             }
                                         }
@@ -218,7 +219,7 @@ struct DiscoverScreen: View {
                                         LazyVStack(spacing: 10) {
                                             ForEach(filteredEvents) { event in
                                                 NavigationLink(value: event.id.uuidString) {
-                                                    EventListItem(event: event)
+                                                    EventListItem(event: event, homeStack: $homeStack)
                                                 }
                                             }
                                         }
@@ -291,7 +292,7 @@ struct DiscoverScreen: View {
             }
             .navigationDestination(for: String.self) { eventId in
                 if let event = EventManager.shared.getEvent(id: eventId) {
-                    EventDetailScreen(event: event)
+                    EventDetailScreen(homeStack: $homeStack, event: event)
                 }
             }
         }
@@ -663,10 +664,11 @@ struct CategoryCard: View {
     }
 }
 
-struct DiscoverScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        DiscoverScreen()
+#Preview {
+    NavigationStack {
+        DiscoverScreen(homeStack: .constant(NavigationPath()))
     }
+    .preferredColorScheme(.dark)
 }
 
 // Add this preference key to track scroll offset

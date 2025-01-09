@@ -2,6 +2,7 @@ import SwiftUI
 
 struct EventListItem: View {
     let event: Event
+    @Binding var homeStack: NavigationPath
     
     // Reference the same category items as DiscoverScreen
     private let categoryItems = [
@@ -250,4 +251,23 @@ struct EventListItem: View {
         .background(Color(.systemGray6).opacity(0.1))
         .cornerRadius(12)
     }
+}
+
+#Preview {
+    EventListItem(
+        event: Event(
+            name: "Sample Event",
+            date: "1/16 @ 7 PM",
+            location: Location(
+                name: "Sample Location",
+                area: "Downtown",
+                city: "Kalamazoo",
+                fullAddress: "123 Main St, Kalamazoo, MI 49007",
+                latitude: 42.2917,
+                longitude: -85.5872
+            ),
+            category: "Food & Drinks"
+        ),
+        homeStack: .constant(NavigationPath())
+    )
 }

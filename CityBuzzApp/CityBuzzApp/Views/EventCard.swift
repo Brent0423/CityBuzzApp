@@ -2,9 +2,13 @@ import SwiftUI
 
 struct EventCard: View {
     let event: Event
+    @Binding var homeStack: NavigationPath
     
     var body: some View {
-        NavigationLink(destination: EventDetailScreen(event: event)) {
+        NavigationLink(destination: EventDetailScreen(
+            homeStack: $homeStack,
+            event: event
+        )) {
             HStack(spacing: 16) {
                 // Left side - Icon with category color
                 Circle()
@@ -52,4 +56,23 @@ struct EventCard: View {
             .cornerRadius(12)
         }
     }
+}
+
+#Preview {
+    EventCard(
+        event: Event(
+            name: "Sample Event",
+            date: "1/16 @ 7 PM",
+            location: Location(
+                name: "Sample Location",
+                area: "Downtown",
+                city: "Kalamazoo",
+                fullAddress: "123 Main St, Kalamazoo, MI 49007",
+                latitude: 42.2917,
+                longitude: -85.5872
+            ),
+            category: "Food & Drinks"
+        ),
+        homeStack: .constant(NavigationPath())
+    )
 }

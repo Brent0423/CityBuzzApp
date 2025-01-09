@@ -7,11 +7,14 @@ struct MainTabView: View {
     
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
-                HomeScreen()
+            NavigationStack(path: $homeStack) {
+                HomeScreen(homeStack: $homeStack)
                     .navigationDestination(for: String.self) { eventId in
                         if let event = EventManager.shared.getEvent(id: eventId) {
-                            EventDetailScreen(event: event)
+                            EventDetailScreen(
+                                homeStack: $homeStack,
+                                event: event
+                            )
                         }
                     }
             }
@@ -27,10 +30,13 @@ struct MainTabView: View {
             }
             
             NavigationStack {
-                DiscoverScreen()
+                DiscoverScreen(homeStack: $homeStack)
                     .navigationDestination(for: String.self) { eventId in
                         if let event = EventManager.shared.getEvent(id: eventId) {
-                            EventDetailScreen(event: event)
+                            EventDetailScreen(
+                                homeStack: $homeStack,
+                                event: event
+                            )
                         }
                     }
             }
@@ -40,7 +46,7 @@ struct MainTabView: View {
                 Text(TabItem.discover.title)
             }
             
-            PostEventScreen()
+            Text("Post Event")
                 .tag(TabItem.post)
                 .tabItem {
                     Image(systemName: TabItem.post.icon)

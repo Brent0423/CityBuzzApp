@@ -1,34 +1,29 @@
 import SwiftUI
 import MapKit
 
-struct Event: Identifiable {
-    let id = UUID()
+struct Event: Identifiable, Hashable {
+    let id: UUID
     let name: String
     let date: String
     let location: Location
     let category: String
-}
-
-struct Location {
-    let name: String
-    let area: String
-    let city: String
-    let fullAddress: String
-    let coordinate: CLLocationCoordinate2D
+    let description: String?
     
-    var shortDisplay: String {
-        return name
-    }
-    
-    var mediumDisplay: String {
-        return "\(name), \(area)"
-    }
-    
-    init(name: String, area: String, city: String, fullAddress: String, latitude: Double = 0, longitude: Double = 0) {
+    init(name: String, date: String, location: Location, category: String, description: String? = nil) {
+        self.id = UUID()
         self.name = name
-        self.area = area
-        self.city = city
-        self.fullAddress = fullAddress
-        self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        self.date = date
+        self.location = location
+        self.category = category
+        self.description = description
     }
-} 
+    
+    // Add Hashable conformance
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Event, rhs: Event) -> Bool {
+        lhs.id == rhs.id
+    }
+}

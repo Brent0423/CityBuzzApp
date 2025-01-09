@@ -15,7 +15,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2916,
                   longitude: -85.5859
               ),
-              category: "Food & Drinks"),
+              category: "Food & Drinks",
+              description: "Join us for a delicious gathering of Kalamazoo's best food trucks featuring local cuisine and street food favorites."),
 
         // Music & Concerts
         Event(name: "Sunday Jazz Brunch", 
@@ -28,7 +29,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2917,
                   longitude: -85.5833
               ),
-              category: "Music & Concerts"),
+              category: "Music & Concerts",
+              description: "Enjoy live jazz music while savoring a delicious Sunday brunch at the historic Old Dog Tavern."),
 
         // Nightlife
         Event(name: "Late Night at The Union", 
@@ -41,7 +43,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2914,
                   longitude: -85.5850
               ),
-              category: "Nightlife"),
+              category: "Nightlife",
+              description: "Experience Kalamazoo's vibrant nightlife scene with great music, drinks, and dancing at The Union."),
 
         // Community
         Event(name: "Community Food Drive", 
@@ -54,7 +57,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2916,
                   longitude: -85.5859
               ),
-              category: "Community"),
+              category: "Community",
+              description: "Help support local families in need by participating in our community food drive. All donations welcome."),
 
         // Arts & Culture
         Event(name: "Winter Art Hop", 
@@ -67,7 +71,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2912,
                   longitude: -85.5850
               ),
-              category: "Arts & Culture"),
+              category: "Arts & Culture",
+              description: "Explore downtown galleries and venues featuring local artists, live music, and refreshments."),
 
         // Markets
         Event(name: "Winter Farmers Market", 
@@ -80,7 +85,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2896,
                   longitude: -85.5851
               ),
-              category: "Markets"),
+              category: "Markets",
+              description: "Shop local produce, artisanal goods, and handcrafted items at our indoor winter farmers market."),
 
         // Sports
         Event(name: "K-Wings vs Toledo Walleye", 
@@ -93,7 +99,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2547,
                   longitude: -85.5494
               ),
-              category: "Sports"),
+              category: "Sports",
+              description: "Cheer on the Kalamazoo Wings as they face off against the Toledo Walleye in this exciting hockey matchup."),
 
         // Comedy
         Event(name: "Open Mic Comedy Night", 
@@ -106,7 +113,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2918,
                   longitude: -85.5833
               ),
-              category: "Comedy"),
+              category: "Comedy",
+              description: "Laugh the night away with local comedians or try your hand at stand-up during our weekly open mic night."),
 
         // Theater
         Event(name: "Anastasia - The Musical", 
@@ -119,7 +127,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2828,
                   longitude: -85.6147
               ),
-              category: "Theater"),
+              category: "Theater",
+              description: "Experience the Broadway sensation that transports us from the twilight of the Russian Empire to the euphoria of Paris in the 1920s."),
 
         // Family Fun
         Event(name: "Family Game Day", 
@@ -132,7 +141,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2908,
                   longitude: -85.5859
               ),
-              category: "Family Fun"),
+              category: "Family Fun",
+              description: "Bring the whole family for an afternoon of board games, puzzles, and fun activities at the library."),
 
         // Workshops
         Event(name: "DIY Workshop: Home Brewing", 
@@ -145,7 +155,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2917,
                   longitude: -85.5872
               ),
-              category: "Workshops"),
+              category: "Workshops",
+              description: "Learn the basics of home brewing from Bell's expert brewers in this hands-on workshop."),
 
         // Charity
         Event(name: "Kalamazoo Humane Society Fundraiser", 
@@ -158,7 +169,8 @@ class EventManager: ObservableObject {
                   latitude: 42.2917,
                   longitude: -85.5872
               ),
-              category: "Charity")
+              category: "Charity",
+              description: "Support the Kalamazoo Humane Society at this fundraising event featuring live music, auctions, and refreshments.")
     ]
     
     func submitEvent(_ event: Event) {

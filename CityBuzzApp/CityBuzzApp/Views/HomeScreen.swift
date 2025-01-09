@@ -6,6 +6,7 @@ struct HomeScreen: View {
     @State private var searchText = ""
     @State private var selectedDate = Date().addingTimeInterval(-365*24*60*60)
     @State private var showDatePicker = false
+    @Binding var homeStack: NavigationPath
     @Namespace private var animation
     
     let gradients = [
@@ -25,7 +26,8 @@ struct HomeScreen: View {
                   latitude: 42.2917,
                   longitude: -85.5872
               ),
-              category: "Food & Drinks"),
+              category: "Food & Drinks",
+              description: "Enjoy craft beers and seasonal treats in Bell's cozy outdoor winter garden."),
         Event(name: "Winter Art Hop", 
               date: "1/18 @ 5 PM", 
               location: Location(
@@ -36,7 +38,8 @@ struct HomeScreen: View {
                   latitude: 42.2912,
                   longitude: -85.5850
               ),
-              category: "Arts & Culture"),
+              category: "Arts & Culture",
+              description: "Explore local art galleries and shops during this monthly downtown art walk."),
         Event(name: "State Theatre Concert", 
               date: "1/20 @ 8 PM", 
               location: Location(
@@ -47,7 +50,8 @@ struct HomeScreen: View {
                   latitude: 42.2906,
                   longitude: -85.5859
               ),
-              category: "Music & Concerts"),
+              category: "Music & Concerts",
+              description: "Live music performance at the historic Kalamazoo State Theatre."),
         Event(name: "Comedy Night", 
               date: "1/21 @ 9 PM", 
               location: Location(
@@ -58,7 +62,8 @@ struct HomeScreen: View {
                   latitude: 42.2918,
                   longitude: -85.5833
               ),
-              category: "Nightlife")
+              category: "Nightlife",
+              description: "Stand-up comedy showcase featuring local and touring comedians.")
     ]
     
     var filteredEvents: [Event] {
@@ -213,7 +218,7 @@ struct HomeScreen: View {
                     LazyVStack(spacing: 12) {
                         ForEach(filteredEvents) { event in
                             NavigationLink(value: event.id.uuidString) {
-                                EventListItem(event: event)
+                                EventListItem(event: event, homeStack: $homeStack)
                             }
                         }
                     }
@@ -299,4 +304,8 @@ struct DateSelectionButton: View {
                 .cornerRadius(10)
         }
     }
+}
+
+#Preview {
+    HomeScreen(homeStack: .constant(NavigationPath()))
 }
