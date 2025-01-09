@@ -1,4 +1,6 @@
-struct PostEventScreen: View {
+import SwiftUI
+
+struct PostScreen: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var eventManager = EventManager.shared
     
@@ -9,10 +11,11 @@ struct PostEventScreen: View {
     @State private var area = ""
     @State private var address = ""
     @State private var selectedCategory = "Food & Drinks"  // Default category
+    @State private var description = ""  // Added description field
     @State private var latitude: Double = 42.2917  // Default Kzoo coordinates
     @State private var longitude: Double = -85.5872
     @State private var showingAlert = false
-    @State private var showingValidationAlert = false // Added for validation alert
+    @State private var showingValidationAlert = false
     
     // Categories matching DiscoverScreen
     let categories = [
@@ -23,14 +26,7 @@ struct PostEventScreen: View {
     
     // Form validation
     private var isFormValid: Bool {
-        let valid = !eventName.isEmpty && !venueName.isEmpty && !area.isEmpty && !address.isEmpty
-        print("🔍 Form validation:")
-        print("Event name: \(eventName.isEmpty ? "❌" : "✅")")
-        print("Venue name: \(venueName.isEmpty ? "❌" : "✅")")
-        print("Area: \(area.isEmpty ? "❌" : "✅")")
-        print("Address: \(address.isEmpty ? "❌" : "✅")")
-        print("Form is \(valid ? "valid ✅" : "invalid ❌")")
-        return valid
+        !eventName.isEmpty && !venueName.isEmpty && !area.isEmpty && !address.isEmpty
     }
     
     var body: some View {
@@ -38,7 +34,6 @@ struct PostEventScreen: View {
             Form {
                 Section(header: Text("Event Details")) {
                     TextField("Event Name", text: $eventName)
-                        .onChange(of: eventName) { _ in print("Event name changed: \(eventName)") }
                     DatePicker("Date & Time", selection: $selectedDate, displayedComponents: [.date, .hourAndMinute])
                     Picker("Category", selection: $selectedCategory) {
                         ForEach(categories, id: \.self) { category in
@@ -52,35 +47,44 @@ struct PostEventScreen: View {
                     TextField("Area", text: $area)
                     TextField("Address", text: $address)
                 }
+                
+                Section(header: Text("Description")) {
+                    TextEditor(text: $description)
+                        .frame(height: 100)
+                }
             }
             .navigationTitle("Post Event")
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Post") {
-                        print("🔘 DEBUG: Post button tapped")
+                        if !isFormValid {
+                            showingValidationAlert = true
+                            return
+                        }
                         
-                        // Create a simple test event
-                        let testEvent = Event(
-                            name: "Test Event",
-                            date: "1/9 @ 7 PM",
+                        // Format date string
+                        let dateFormatter = DateFormatter()
+                        dateFormatter.dateFormat = "M/dd '@' h a"
+                        let formattedDate = dateFormatter.string(from: selectedDate)
+                        
+                        let newEvent = Event(
+                            name: eventName,
+                            date: formattedDate,
                             location: Location(
-                                name: "Test Venue",
-                                area: "Downtown",
+                                name: venueName,
+                                area: area,
                                 city: "Kalamazoo",
-                                fullAddress: "123 Test St",
-                                latitude: 42.2917,
-                                longitude: -85.5872
+                                fullAddress: address,
+                                latitude: latitude,
+                                longitude: longitude
                             ),
-                            category: "Food & Drinks"
+                            category: selectedCategory,
+                            description: description.isEmpty ? nil : description
                         )
                         
-                        print("🔴 DEBUG: Created test event")
-                        eventManager.submitEvent(testEvent)
-                        print("🔴 DEBUG: Submitted test event")
+                        eventManager.submitEvent(newEvent)
                         showingAlert = true
                     }
-                    // Remove the disabled modifier temporarily for testing
-                    //.disabled(!isFormValid)
                 }
                 
                 ToolbarItem(placement: .navigationBarLeading) {
@@ -91,7 +95,6 @@ struct PostEventScreen: View {
             }
             .alert("Event Posted!", isPresented: $showingAlert) {
                 Button("OK") {
-                    print("🔴 DEBUG: Alert OK tapped")
                     dismiss()
                 }
             } message: {
@@ -104,4 +107,8 @@ struct PostEventScreen: View {
             }
         }
     }
+}
+
+#Preview {
+    PostScreen()
 }

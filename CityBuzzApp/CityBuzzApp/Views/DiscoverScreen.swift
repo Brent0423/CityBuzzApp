@@ -17,6 +17,7 @@ struct DiscoverScreen: View {
     @State private var scrollOffset: CGFloat = 0
     @Binding var homeStack: NavigationPath
     @Namespace private var scrollSpace
+    @Environment(\.dismiss) var dismiss
     
     // Cache selected categories
     @AppStorage("savedCategories") private var savedCategoriesData: Data = Data() {
@@ -95,187 +96,214 @@ struct DiscoverScreen: View {
     
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
-                // Fixed header background
-                Color.black
-                    .frame(height: 0)
-                    .ignoresSafeArea()
-                
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        VStack(spacing: 24) {
-                            // Title
-                            Text("Discover")
-                                .font(.system(size: 48, weight: .bold))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                                .padding(.top, -8)
-                            
-                            // Search Bar
-                            HStack {
-                                Image(systemName: "magnifyingglass")
-                                    .foregroundColor(.gray)
-                                TextField("Search events...", text: $searchText)
-                                    .foregroundColor(.white)
-                                    .autocapitalization(.none)
-                                    .submitLabel(.search)
-                                
-                                if !searchText.isEmpty {
-                                    Button(action: { 
-                                        withAnimation { searchText = "" }
-                                    }) {
-                                        Image(systemName: "xmark.circle.fill")
-                                            .foregroundColor(.gray)
-                                    }
+            ScrollViewReader { proxy in
+                ScrollView {
+                    VStack(spacing: 24) {
+                        // Header
+                        HStack {
+                            Button(action: { dismiss() }) {
+                                HStack(spacing: 4) {
+                                    Image(systemName: "chevron.left")
+                                        .font(.system(size: 18))
+                                    Text("Back")
+                                        .font(.system(size: 17))
                                 }
+                                .foregroundColor(.white)
                             }
-                            .padding(12)
-                            .background(Color.white.opacity(0.1))
-                            .cornerRadius(15)
-                            .padding(.horizontal, 20)
                             
-                            // Show either categories or search results
-                            if searchText.isEmpty {
-                                // Categories Grid
-                                VStack(alignment: .leading, spacing: 15) {
-                                    HStack {
-                                        Text("Categories")
-                                            .font(.title2.bold())
-                                            .foregroundColor(.white)
-                                            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
-                                        
-                                        if !selectedCategories.isEmpty {
-                                            Spacer()
-                                            Button(action: {
-                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                    selectedCategories.removeAll()
-                                                }
-                                                let generator = UIImpactFeedbackGenerator(style: .medium)
-                                                generator.impactOccurred()
-                                            }) {
-                                                HStack(spacing: 4) {
-                                                    Image(systemName: "xmark.circle.fill")
-                                                    Text("Clear")
-                                                }
-                                                .foregroundColor(.gray)
-                                                .font(.system(size: 14, weight: .medium))
-                                            }
-                                        }
-                                    }
-                                    .padding(.horizontal, 20)
-                                    
-                                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
-                                        ForEach(categoryItems, id: \.name) { category in
-                                            CategoryCard(
-                                                category: category,
-                                                isSelected: selectedCategories.contains(category.name),
-                                                action: {
-                                                    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-                                                        toggleCategory(category.name)
-                                                    }
-                                                }
-                                            )
-                                            .transition(.asymmetric(
-                                                insertion: .scale.combined(with: .opacity),
-                                                removal: .opacity
-                                            ))
-                                        }
-                                    }
-                                    .padding(.horizontal, 20)
+                            Spacer()
+                            
+                            Button(action: {
+                                let shareText = "Check out these events on CityBuzz!"
+                                let av = UIActivityViewController(activityItems: [shareText], applicationActivities: nil)
+                                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+                                   let window = windowScene.windows.first {
+                                    window.rootViewController?.present(av, animated: true)
                                 }
-                                
-                                // Events List with title "Recommended for You"
-                                VStack(alignment: .leading, spacing: 15) {
-                                    Text("Recommended for You")
-                                        .font(.title2.bold())
-                                        .foregroundColor(.white)
-                                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
-                                        .padding(.horizontal, 20)
-                                    
-                                    if filteredEvents.isEmpty {
-                                        EmptyStateView()
-                                    } else {
-                                        LazyVStack(spacing: 10) {
-                                            ForEach(filteredEvents) { event in
-                                                NavigationLink(value: event.id.uuidString) {
-                                                    EventListItem(event: event, homeStack: $homeStack)
-                                                }
-                                            }
-                                        }
-                                        .padding(.horizontal, 20)
-                                    }
-                                }
-                            } else {
-                                // Search Results
-                                VStack(alignment: .leading, spacing: 15) {
-                                    Text("Search Results")
-                                        .font(.title2.bold())
-                                        .foregroundColor(.white)
-                                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
-                                        .padding(.horizontal, 20)
-                                    
-                                    if filteredEvents.isEmpty {
-                                        EmptyStateView()
-                                    } else {
-                                        LazyVStack(spacing: 10) {
-                                            ForEach(filteredEvents) { event in
-                                                NavigationLink(value: event.id.uuidString) {
-                                                    EventListItem(event: event, homeStack: $homeStack)
-                                                }
-                                            }
-                                        }
-                                        .padding(.horizontal, 20)
-                                    }
+                            }) {
+                                Image(systemName: "square.and.arrow.up")
+                                    .font(.system(size: 18))
+                                    .foregroundColor(.white)
+                            }
+                        }
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 12)
+                        .frame(maxWidth: .infinity)
+                        .background(
+                            Color.black
+                                .ignoresSafeArea(edges: .top)
+                        )
+                        
+                        // Title (moved down slightly)
+                        Text("Discover")
+                            .font(.system(size: 48, weight: .bold))
+                            .frame(maxWidth: .infinity, alignment: .center)
+                            .padding(.top, 8)  // Added padding to account for header
+                        
+                        // Search Bar
+                        HStack {
+                            Image(systemName: "magnifyingglass")
+                                .foregroundColor(.gray)
+                            TextField("Search events...", text: $searchText)
+                                .foregroundColor(.white)
+                                .autocapitalization(.none)
+                                .submitLabel(.search)
+                            
+                            if !searchText.isEmpty {
+                                Button(action: { 
+                                    withAnimation { searchText = "" }
+                                }) {
+                                    Image(systemName: "xmark.circle.fill")
+                                        .foregroundColor(.gray)
                                 }
                             }
                         }
-                        .padding(.vertical)
-                        .background(
-                            GeometryReader { geometry in
-                                Color.clear.preference(
-                                    key: ScrollOffsetPreferenceKey.self,
-                                    value: geometry.frame(in: .named("scroll")).minY
-                                )
-                            }
-                        )
-                    }
-                    .coordinateSpace(name: "scroll")
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                        scrollOffset = value
-                        showScrollToTop = value < -150 // Show button after scrolling down 150pts
-                    }
-                    
-                    // Scroll to top button
-                    if showScrollToTop {
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                Button(action: {
-                                    withAnimation(.spring()) {
-                                        proxy.scrollTo(scrollSpace, anchor: .top)
-                                    }
-                                    let generator = UIImpactFeedbackGenerator(style: .light)
-                                    generator.impactOccurred()
-                                }) {
-                                    Image(systemName: "arrow.up")
-                                        .font(.headline)
+                        .padding(12)
+                        .background(Color.white.opacity(0.1))
+                        .cornerRadius(15)
+                        .padding(.horizontal, 20)
+                        
+                        // Show either categories or search results
+                        if searchText.isEmpty {
+                            // Categories Grid
+                            VStack(alignment: .leading, spacing: 15) {
+                                HStack {
+                                    Text("Categories")
+                                        .font(.title2.bold())
                                         .foregroundColor(.white)
-                                        .padding()
-                                        .background(Color.blue)
-                                        .clipShape(Circle())
-                                        .shadow(color: .black.opacity(0.2), radius: 5)
+                                        .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                        
+                                    if !selectedCategories.isEmpty {
+                                        Spacer()
+                                        Button(action: {
+                                            withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                selectedCategories.removeAll()
+                                            }
+                                            let generator = UIImpactFeedbackGenerator(style: .medium)
+                                            generator.impactOccurred()
+                                        }) {
+                                            HStack(spacing: 4) {
+                                                Image(systemName: "xmark.circle.fill")
+                                                Text("Clear")
+                                            }
+                                            .foregroundColor(.gray)
+                                            .font(.system(size: 14, weight: .medium))
+                                        }
+                                    }
                                 }
-                                .padding(.trailing, 20)
-                                .padding(.bottom, 20)
-                                .transition(.scale.combined(with: .opacity))
+                                .padding(.horizontal, 20)
+                                
+                                LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                                    ForEach(categoryItems, id: \.name) { category in
+                                        CategoryCard(
+                                            category: category,
+                                            isSelected: selectedCategories.contains(category.name),
+                                            action: {
+                                                withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                                                    toggleCategory(category.name)
+                                                }
+                                            }
+                                        )
+                                        .transition(.asymmetric(
+                                            insertion: .scale.combined(with: .opacity),
+                                            removal: .opacity
+                                        ))
+                                    }
+                                }
+                                .padding(.horizontal, 20)
                             }
+                            
+                            // Events List with title "Recommended for You"
+                            VStack(alignment: .leading, spacing: 15) {
+                                Text("Recommended for You")
+                                    .font(.title2.bold())
+                                    .foregroundColor(.white)
+                                    .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                    .padding(.horizontal, 20)
+                                
+                                if filteredEvents.isEmpty {
+                                    EmptyStateView()
+                                } else {
+                                    LazyVStack(spacing: 10) {
+                                        ForEach(filteredEvents) { event in
+                                            NavigationLink(value: event.id.uuidString) {
+                                                EventListItem(event: event, homeStack: $homeStack)
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 20)
+                                }
+                            }
+                        } else {
+                            // Search Results
+                            VStack(alignment: .leading, spacing: 15) {
+                                Text("Search Results")
+                                    .font(.title2.bold())
+                                    .foregroundColor(.white)
+                                    .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                                    .padding(.horizontal, 20)
+                                
+                                if filteredEvents.isEmpty {
+                                    EmptyStateView()
+                                } else {
+                                    LazyVStack(spacing: 10) {
+                                        ForEach(filteredEvents) { event in
+                                            NavigationLink(value: event.id.uuidString) {
+                                                EventListItem(event: event, homeStack: $homeStack)
+                                            }
+                                        }
+                                    }
+                                    .padding(.horizontal, 20)
+                                }
+                            }
+                        }
+                    }
+                    .padding(.vertical)
+                    .background(
+                        GeometryReader { geometry in
+                            Color.clear.preference(
+                                key: ScrollOffsetPreferenceKey.self,
+                                value: geometry.frame(in: .named("scroll")).minY
+                            )
+                        }
+                    )
+                }
+                .coordinateSpace(name: "scroll")
+                .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                    scrollOffset = value
+                    showScrollToTop = value < -150 // Show button after scrolling down 150pts
+                }
+                
+                // Scroll to top button
+                if showScrollToTop {
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Button(action: {
+                                withAnimation(.spring()) {
+                                    proxy.scrollTo(scrollSpace, anchor: .top)
+                                }
+                                let generator = UIImpactFeedbackGenerator(style: .light)
+                                generator.impactOccurred()
+                            }) {
+                                Image(systemName: "arrow.up")
+                                    .font(.headline)
+                                    .foregroundColor(.white)
+                                    .padding()
+                                    .background(Color.blue)
+                                    .clipShape(Circle())
+                                    .shadow(color: .black.opacity(0.2), radius: 5)
+                            }
+                            .padding(.trailing, 20)
+                            .padding(.bottom, 20)
+                            .transition(.scale.combined(with: .opacity))
                         }
                     }
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar(.hidden)
-            .background(Color.black)
             .alert("Error", isPresented: $showError) {
                 Button("Retry") {
                     Task {
@@ -296,6 +324,9 @@ struct DiscoverScreen: View {
                 }
             }
         }
+        .navigationBarHidden(true)
+        .ignoresSafeArea(edges: .top)
+        .background(Color(UIColor.systemBackground))
     }
     
     private func toggleCategory(_ category: String) {
@@ -658,7 +689,7 @@ struct CategoryCard: View {
             .cornerRadius(16)
             .overlay(
                 RoundedRectangle(cornerRadius: 16)
-                    .stroke(isSelected ? category.color : Color.white.opacity(0.1), lineWidth: 1)
+                    .stroke(isSelected ? category.color : Color.white.opacity(0.5), lineWidth: 1)
             )
         }
     }

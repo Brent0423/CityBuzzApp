@@ -46,12 +46,22 @@ struct MainTabView: View {
                 Text(TabItem.discover.title)
             }
             
-            Text("Post Event")
-                .tag(TabItem.post)
-                .tabItem {
-                    Image(systemName: TabItem.post.icon)
-                    Text(TabItem.post.title)
-                }
+            NavigationStack {
+                PostEventScreen()
+                    .navigationDestination(for: String.self) { eventId in
+                        if let event = EventManager.shared.getEvent(id: eventId) {
+                            EventDetailScreen(
+                                homeStack: $homeStack,
+                                event: event
+                            )
+                        }
+                    }
+            }
+            .tag(TabItem.post)
+            .tabItem {
+                Image(systemName: TabItem.post.icon)
+                Text(TabItem.post.title)
+            }
             
             SettingsScreen()
                 .tag(TabItem.settings)

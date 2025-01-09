@@ -139,11 +139,9 @@ struct HomeScreen: View {
                 VStack(spacing: 24) {
                     Text("City Buzz")
                         .font(.system(size: 48, weight: .bold))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(.top, -8)
-                        .padding(.horizontal, 20)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 8)
                         .foregroundColor(.white)
-                        .shadow(color: .black.opacity(0.5), radius: 8, x: 0, y: 3)
                     // Search Bar
                     HStack {
                         Image(systemName: "magnifyingglass")

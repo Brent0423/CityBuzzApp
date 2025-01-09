@@ -338,11 +338,12 @@
                 // Sticky Header
                 HStack {
                     Button(action: { 
-                        homeStack.removeLast(homeStack.count)
+                        dismiss()
                     }) {
                         HStack(spacing: 6) {
-                            Image(systemName: "house.fill")
-                            Text("Home")
+                            Image(systemName: "chevron.left")
+                                .font(.system(size: 20, weight: .semibold))
+                            Text("Back")
                                 .font(.system(size: 16, weight: .medium))
                         }
                         .foregroundColor(.primary)
