@@ -1,6 +1,6 @@
 import MapKit
 
-struct Location: Codable {
+struct Location: Codable, Hashable {
     let name: String
     let area: String
     let city: String
@@ -43,5 +43,14 @@ struct Location: Codable {
         try container.encode(fullAddress, forKey: .fullAddress)
         try container.encode(coordinate.latitude, forKey: .latitude)
         try container.encode(coordinate.longitude, forKey: .longitude)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(fullAddress)
+    }
+    
+    static func == (lhs: Location, rhs: Location) -> Bool {
+        lhs.name == rhs.name && lhs.fullAddress == rhs.fullAddress
     }
 } 

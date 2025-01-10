@@ -1,7 +1,7 @@
 import SwiftUI
 import MapKit
 
-struct Event: Identifiable, Codable {
+struct Event: Identifiable, Codable, Hashable {
     let id: UUID
     let name: String
     let date: String
@@ -63,5 +63,13 @@ struct Event: Identifiable, Codable {
         
         try container.encode(category, forKey: .category)
         try container.encodeIfPresent(description, forKey: .description)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: Event, rhs: Event) -> Bool {
+        lhs.id == rhs.id
     }
 }

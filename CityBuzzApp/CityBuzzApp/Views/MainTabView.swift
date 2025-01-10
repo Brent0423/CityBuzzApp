@@ -30,15 +30,10 @@ struct MainTabView: View {
             }
             
             NavigationStack {
-                DiscoverScreen(homeStack: $homeStack)
-                    .navigationDestination(for: String.self) { eventId in
-                        if let event = EventManager.shared.getEvent(id: eventId) {
-                            EventDetailScreen(
-                                homeStack: $homeStack,
-                                event: event
-                            )
-                        }
-                    }
+                DiscoverScreen(
+                    selectedTab: $selectedTab,
+                    homeStack: $homeStack
+                )
             }
             .tag(TabItem.discover)
             .tabItem {
@@ -47,7 +42,7 @@ struct MainTabView: View {
             }
             
             NavigationStack {
-                PostEventScreen()
+                PostEventScreen(selectedTab: $selectedTab)
                     .navigationDestination(for: String.self) { eventId in
                         if let event = EventManager.shared.getEvent(id: eventId) {
                             EventDetailScreen(

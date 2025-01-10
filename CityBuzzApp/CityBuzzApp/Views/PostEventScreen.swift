@@ -50,6 +50,7 @@ struct PostEventScreen: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var locationManager = LocationSearchManager()
     @StateObject private var eventManager = EventManager.shared
+    @Binding var selectedTab: TabItem
     
     @State private var eventTitle = ""
     @State private var selectedDate = Date()
@@ -123,19 +124,13 @@ struct PostEventScreen: View {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "M/dd '@' h a"
         let formattedDate = dateFormatter.string(from: selectedDate)
-        print("📅 Date formatted: \(formattedDate)")
-        
-        let combinedDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: selectedTime),
-                                               minute: Calendar.current.component(.minute, from: selectedTime),
-                                               second: 0,
-                                               of: selectedDate) ?? selectedDate
         
         let newEvent = Event(
             name: eventTitle,
             date: formattedDate,
             location: Location(
                 name: location,
-                area: "Downtown",  // You might want to make this configurable
+                area: "Downtown",
                 city: "Kalamazoo",
                 fullAddress: location,
                 latitude: 42.2917,
@@ -149,13 +144,13 @@ struct PostEventScreen: View {
         eventManager.submitEvent(newEvent)
         print("✅ Event submitted to manager")
         
-        showSuccessAlert = true
-        isPosting = false
+        resetForm()
+        selectedTab = .home
         print("=== Post Complete ===")
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ScrollView {
                 VStack(alignment: .leading, spacing: 24) {
                     GroupBox {
@@ -188,7 +183,26 @@ struct PostEventScreen: View {
             .navigationTitle("Create Event")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
-                toolbarContent
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button {
+                        selectedTab = .home
+                    } label: {
+                        Image(systemName: "arrow.left")
+                            .foregroundColor(.white)
+                    }
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button(action: createEvent) {
+                        Text("Post")
+                            .fontWeight(.bold)
+                            .foregroundColor(.black)
+                            .padding(.horizontal, 20)
+                            .padding(.vertical, 8)
+                            .background(.white)
+                            .cornerRadius(20)
+                    }
+                    .disabled(isPosting)
+                }
             }
             .sheet(isPresented: $showingCategoryPicker) {
                 List(categories, id: \.self) { category in
@@ -219,16 +233,10 @@ struct PostEventScreen: View {
             } message: {
                 Text(errorMessage)
             }
-            .alert("Success!", isPresented: $showSuccessAlert) {
-                Button("OK") {
-                    resetForm()
-                    navigateToHome = true
-                }
+            .alert("Success", isPresented: $showSuccessAlert) {
+                Button("OK") { dismiss() }
             } message: {
-                Text("Your event has been successfully posted.")
-            }
-            .navigationDestination(isPresented: $navigateToHome) {
-                ContentView()
+                Text("Your event has been posted successfully!")
             }
         }
     }
@@ -295,29 +303,6 @@ struct PostEventScreen: View {
                     RoundedRectangle(cornerRadius: 12)
                         .stroke(.white.opacity(0.5), lineWidth: 1)
                 )
-        }
-    }
-    
-    private var toolbarContent: some ToolbarContent {
-        Group {
-            ToolbarItem(placement: .navigationBarLeading) {
-                Button(action: { dismiss() }) {
-                    Image(systemName: "arrow.left")
-                        .foregroundColor(.gray)
-                }
-            }
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button(action: createEvent) {
-                    Text("Post")
-                        .fontWeight(.bold)
-                        .foregroundColor(.black)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 8)
-                        .background(.white)
-                        .cornerRadius(20)
-                }
-                .disabled(isPosting)
-            }
         }
     }
 }
@@ -421,6 +406,6 @@ struct InputField: View {
 
 // Add preview provider
 #Preview {
-    PostEventScreen()
+    PostEventScreen(selectedTab: .constant(.home))
         .preferredColorScheme(.dark)
 }
