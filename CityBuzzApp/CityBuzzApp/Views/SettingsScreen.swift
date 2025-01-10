@@ -2,91 +2,83 @@ import SwiftUI
 
 struct SettingsScreen: View {
     @State private var showLogoutAlert = false
-    @State private var hoveredButton: String? = nil
-    @Namespace private var animation
+    @Binding var selectedTab: TabItem
     
     var body: some View {
-        NavigationView {
-            ZStack {
-                LinearGradient(
-                    gradient: Gradient(colors: [Color.black, Color(hex: "1A1A1A")]),
-                    startPoint: .top,
-                    endPoint: .bottom
-                ).ignoresSafeArea()
+        ScrollView {
+            VStack(spacing: 24) { // Increased spacing
+                Text("Settings")
+                    .font(.system(size: 42, weight: .bold))
+                    .frame(maxWidth: .infinity, alignment: .center)
+                    .padding(.top, -35)
+                    .foregroundColor(.white)
                 
-                ScrollView {
-                    VStack(spacing: 24) {
-                        // Account Settings Section
-                        VStack(alignment: .leading, spacing: 24) {
-                            Text("Account Settings")
-                                .font(.headline)
-                                .foregroundColor(.gray)
-                            
-                            NavigationLink(destination: AccountScreen()) {
-                                SettingsRow(title: "Account", icon: "person.circle.fill")
-                            }
-                            
-                            NavigationLink(destination: NotificationsScreen()) {
-                                SettingsRow(title: "Notifications", icon: "bell.badge.fill")
+                // Rest of your settings content...
+                VStack(spacing: 32) { // Increased spacing
+                    // Support Section
+                    SettingsSection(title: "Support") {
+                        VStack(spacing: 12) { // Added spacing between navigation links
+                            NavigationLink(destination: HelpSupportScreen()) {
+                                SettingsRow(title: "Help & Support", icon: "questionmark.circle.fill")
                             }
                             
                             NavigationLink(destination: PrivacyPolicyScreen()) {
-                                SettingsRow(title: "Privacy", icon: "lock.shield.fill")
-                            }
-                        }
-                        .padding()
-                        .background(Color(UIColor.systemGray6).opacity(0.5))
-                        .cornerRadius(16)
-                        
-                        // Support Section
-                        VStack(alignment: .leading, spacing: 24) {
-                            Text("Support")
-                                .font(.headline)
-                                .foregroundColor(.gray)
-                            
-                            NavigationLink(destination: HelpSupportScreen()) {
-                                SettingsRow(title: "Help & Support", icon: "questionmark.circle.fill")
+                                SettingsRow(title: "Privacy Policy", icon: "lock.shield.fill")
                             }
                             
                             NavigationLink(destination: AboutScreen()) {
                                 SettingsRow(title: "About", icon: "info.circle.fill")
                             }
                         }
-                        .padding()
-                        .background(Color(UIColor.systemGray6).opacity(0.5))
-                        .cornerRadius(16)
-                        
-                        // Logout Section
-                        VStack(alignment: .leading, spacing: 24) {
-                            Button {
-                                showLogoutAlert = true
-                            } label: {
-                                SettingsRow(
-                                    title: "Log Out",
-                                    icon: "rectangle.portrait.and.arrow.right.fill",
-                                    color: .red
-                                )
-                            }
-                        }
-                        .padding()
-                        .background(Color(UIColor.systemGray6).opacity(0.5))
-                        .cornerRadius(16)
                     }
-                    .padding()
                 }
-            }
-            .navigationTitle("Settings")
-            .navigationBarTitleDisplayMode(.large)
-            .alert("Log Out", isPresented: $showLogoutAlert) {
-                Button("Cancel", role: .cancel) { }
-                Button("Log Out", role: .destructive) {
-                    // Add logout action here
-                }
-            } message: {
-                Text("Are you sure you want to log out?")
+                .padding(.horizontal)
+                .padding(.top, 8) // Added top padding
             }
         }
-        .navigationViewStyle(.stack)
+        .background(Color.black)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button {
+                    withAnimation {
+                        selectedTab = .home
+                    }
+                } label: {
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.white)
+                        .font(.system(size: 20))
+                }
+            }
+        }
+        .preferredColorScheme(.dark)
+    }
+}
+
+struct SettingsSection<Content: View>: View {
+    let title: String?
+    let content: Content
+    
+    init(title: String? = nil, @ViewBuilder content: () -> Content) {
+        self.title = title
+        self.content = content()
+    }
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) { // Increased spacing
+            if let title = title {
+                Text(title)
+                    .font(.headline)
+                    .foregroundColor(.gray)
+                    .padding(.leading, 8)
+            }
+            
+            VStack(spacing: 4) { // Increased spacing between rows
+                content
+            }
+            .background(Color(.systemGray6).opacity(0.1))
+            .cornerRadius(12)
+        }
     }
 }
 
@@ -96,14 +88,14 @@ struct SettingsRow: View {
     var color: Color = .white
     
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             Image(systemName: icon)
                 .foregroundColor(color)
+                .font(.system(size: 22))
                 .frame(width: 30)
             
             Text(title)
                 .foregroundColor(color)
-                .fontWeight(title == "Log Out" ? .bold : .regular)
             
             Spacer()
             
@@ -111,8 +103,7 @@ struct SettingsRow: View {
                 .font(.system(size: 14))
                 .foregroundColor(.gray)
         }
-        .padding()
-        .background(Color(UIColor.systemGray5))
-        .cornerRadius(10)
+        .padding(.vertical, 14) // Increased vertical padding
+        .padding(.horizontal, 16)
     }
 }

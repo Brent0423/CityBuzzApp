@@ -17,6 +17,8 @@ struct DateTimeSection: View {
     @Binding var selectedDate: Date
     @Binding var selectedTime: Date
     let accentColor: Color
+    @State private var showDatePicker = false
+    @State private var showTimePicker = false
     
     var body: some View {
         HStack(spacing: 16) {
@@ -24,23 +26,65 @@ struct DateTimeSection: View {
             VStack(alignment: .leading) {
                 Text("Date")
                     .foregroundColor(.gray)
-                DatePicker("", selection: $selectedDate, displayedComponents: .date)
-                    .datePickerStyle(.compact)
-                    .labelsHidden()
-                    .tint(.white)
+                Button {
+                    showDatePicker.toggle()
+                } label: {
+                    Text(selectedDate.formatted(date: .abbreviated, time: .omitted))
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(12)
+                }
             }
             .frame(maxWidth: .infinity)
+            .sheet(isPresented: $showDatePicker) {
+                NavigationStack {
+                    DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
+                        .datePickerStyle(.graphical)
+                        .tint(.white)
+                        .padding()
+                        .navigationBarItems(
+                            trailing: Button("Done") {
+                                showDatePicker = false
+                            }
+                        )
+                }
+                .presentationDetents([.height(400)])
+                .presentationBackground(.ultraThinMaterial)
+            }
             
             // Time Picker
             VStack(alignment: .leading) {
                 Text("Time")
                     .foregroundColor(.gray)
-                DatePicker("", selection: $selectedTime, displayedComponents: .hourAndMinute)
-                    .datePickerStyle(.compact)
-                    .labelsHidden()
-                    .tint(.white)
+                Button {
+                    showTimePicker.toggle()
+                } label: {
+                    Text(selectedTime.formatted(date: .omitted, time: .shortened))
+                        .foregroundColor(.white)
+                        .padding()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .background(Color.black.opacity(0.3))
+                        .cornerRadius(12)
+                }
             }
             .frame(maxWidth: .infinity)
+            .sheet(isPresented: $showTimePicker) {
+                NavigationStack {
+                    DatePicker("", selection: $selectedTime, displayedComponents: .hourAndMinute)
+                        .datePickerStyle(.wheel)
+                        .tint(.white)
+                        .padding()
+                        .navigationBarItems(
+                            trailing: Button("Done") {
+                                showTimePicker = false
+                            }
+                        )
+                }
+                .presentationDetents([.height(300)])
+                .presentationBackground(.ultraThinMaterial)
+            }
         }
     }
 }
@@ -144,8 +188,8 @@ struct PostEventScreen: View {
         eventManager.submitEvent(newEvent)
         print("✅ Event submitted to manager")
         
-        resetForm()
-        selectedTab = .home
+        isPosting = false
+        showSuccessAlert = true  // Show success alert
         print("=== Post Complete ===")
     }
     
@@ -185,12 +229,16 @@ struct PostEventScreen: View {
             .toolbar {
                 ToolbarItem(placement: .navigationBarLeading) {
                     Button {
-                        selectedTab = .home
+                        withAnimation {
+                            selectedTab = .home
+                        }
                     } label: {
                         Image(systemName: "arrow.left")
                             .foregroundColor(.white)
+                            .font(.system(size: 20))
                     }
                 }
+                
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button(action: createEvent) {
                         Text("Post")
@@ -233,10 +281,13 @@ struct PostEventScreen: View {
             } message: {
                 Text(errorMessage)
             }
-            .alert("Success", isPresented: $showSuccessAlert) {
-                Button("OK") { dismiss() }
+            .alert("Success!", isPresented: $showSuccessAlert) {
+                Button("OK") {
+                    resetForm()
+                    selectedTab = .home  // Navigate home after user acknowledges success
+                }
             } message: {
-                Text("Your event has been posted successfully!")
+                Text("Your event has been successfully posted!")
             }
         }
     }

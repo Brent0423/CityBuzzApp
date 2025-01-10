@@ -58,12 +58,17 @@ struct MainTabView: View {
                 Text(TabItem.post.title)
             }
             
-            SettingsScreen()
-                .tag(TabItem.settings)
-                .tabItem {
-                    Image(systemName: TabItem.settings.icon)
-                    Text(TabItem.settings.title)
-                }
+            NavigationStack {
+                SettingsScreen(selectedTab: $selectedTab)
+            }
+            .preferredColorScheme(.dark)
+            .tag(TabItem.settings)
+            .tabItem {
+                Image(systemName: TabItem.settings.icon)
+                Text(TabItem.settings.title)
+            }
         }
+        .preferredColorScheme(.dark)
+        .accentColor(.white)
     }
 }

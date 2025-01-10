@@ -21,6 +21,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 @main
 struct CityBuzzApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
+    @State private var selectedTab: TabItem = .home
     
     var body: some Scene {
         WindowGroup {
