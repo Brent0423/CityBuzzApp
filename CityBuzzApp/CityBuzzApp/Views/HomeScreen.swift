@@ -136,25 +136,35 @@ struct HomeScreen: View {
     var body: some View {
         NavigationView {
             ScrollView {
-                VStack(spacing: 24) {
+                VStack(spacing: 16) {
                     Text("City Buzz")
-                        .font(.system(size: 48, weight: .bold))
+                        .font(.system(size: 42, weight: .bold))
                         .frame(maxWidth: .infinity, alignment: .center)
-                        .padding(.top, 8)
+                        .padding(.top, 4)
                         .foregroundColor(.white)
+                    
                     // Search Bar
                     HStack {
                         Image(systemName: "magnifyingglass")
                             .foregroundColor(.gray)
-                            .font(.system(size: 18))
                         TextField("Search events...", text: $searchText)
-                            .foregroundColor(.primary)
-                            .font(.system(size: 18))
+                            .foregroundColor(.white)
+                            .autocapitalization(.none)
+                            .submitLabel(.search)
+                        
+                        if !searchText.isEmpty {
+                            Button(action: { 
+                                withAnimation { searchText = "" }
+                            }) {
+                                Image(systemName: "xmark.circle.fill")
+                                    .foregroundColor(.gray)
+                            }
+                        }
                     }
-                    .padding(12)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(10)
-                    .padding(.horizontal)
+                    .padding(10)
+                    .background(Color.white.opacity(0.1))
+                    .cornerRadius(15)
+                    .padding(.horizontal, 20)
                     
                     // Date Filter
                     HStack(spacing: 12) {
@@ -180,7 +190,7 @@ struct HomeScreen: View {
                                 .cornerRadius(10)
                         }
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 20)
                     
                     if showDatePicker {
                         DatePicker("Select Date", selection: $selectedDate, displayedComponents: .date)
@@ -195,10 +205,12 @@ struct HomeScreen: View {
                     }
                     
                     // Featured Section
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 12) {
                         Text("Featured")
-                            .font(.system(size: 28, weight: .bold))
-                            .padding(.horizontal)
+                            .font(.title2.bold())
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.3), radius: 2, x: 0, y: 1)
+                            .padding(.horizontal, 20)
                         
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 16) {
@@ -208,21 +220,21 @@ struct HomeScreen: View {
                                     }
                                 }
                             }
-                            .padding(.horizontal)
+                            .padding(.horizontal, 20)
                         }
                     }
                     
                     // Event List
-                    LazyVStack(spacing: 12) {
+                    LazyVStack(spacing: 10) {
                         ForEach(filteredEvents) { event in
                             NavigationLink(value: event.id.uuidString) {
                                 EventListItem(event: event, homeStack: $homeStack)
                             }
                         }
                     }
-                    .padding(.horizontal)
+                    .padding(.horizontal, 20)
                 }
-                .padding(.vertical)
+                .padding(.vertical, 8)
             }
             .navigationBarHidden(true)
         }

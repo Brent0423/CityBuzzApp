@@ -1,41 +1,19 @@
-import SwiftUI
 import MapKit
-import CoreLocation
 
-struct Location: Hashable {
+struct Location: Codable {
     let name: String
     let area: String
     let city: String
     let fullAddress: String
-    let coordinate: CLLocationCoordinate2D
+    var coordinate: CLLocationCoordinate2D
     
-    // Computed properties for address display
-    var streetAddress: String {
-        let components = fullAddress.components(separatedBy: ",")
-        return components[0].trimmingCharacters(in: .whitespaces)
-    }
-    
-    var cityStateZip: String {
-        let components = fullAddress.components(separatedBy: ",")
-        if components.count > 1 {
-            let lastPart = components[1].trimmingCharacters(in: .whitespaces)
-            let parts = lastPart.components(separatedBy: " ")
-            if parts.count >= 3 {
-                // Format: "Kalamazoo, MI 49007"
-                return lastPart
-            }
-            // If we don't have all components, return what we have
-            return lastPart
-        }
-        return ""
-    }
-    
-    var shortDisplay: String {
-        return name
-    }
-    
-    var mediumDisplay: String {
-        return "\(name), \(area)"
+    enum CodingKeys: String, CodingKey {
+        case name
+        case area
+        case city
+        case fullAddress
+        case latitude
+        case longitude
     }
     
     init(name: String, area: String, city: String, fullAddress: String, latitude: Double = 0, longitude: Double = 0) {
@@ -46,21 +24,24 @@ struct Location: Hashable {
         self.coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(name)
-        hasher.combine(area)
-        hasher.combine(city)
-        hasher.combine(fullAddress)
-        hasher.combine(coordinate.latitude)
-        hasher.combine(coordinate.longitude)
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        name = try container.decode(String.self, forKey: .name)
+        area = try container.decode(String.self, forKey: .area)
+        city = try container.decode(String.self, forKey: .city)
+        fullAddress = try container.decode(String.self, forKey: .fullAddress)
+        let latitude = try container.decode(Double.self, forKey: .latitude)
+        let longitude = try container.decode(Double.self, forKey: .longitude)
+        coordinate = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
     }
     
-    static func == (lhs: Location, rhs: Location) -> Bool {
-        return lhs.name == rhs.name &&
-               lhs.area == rhs.area &&
-               lhs.city == rhs.city &&
-               lhs.fullAddress == rhs.fullAddress &&
-               lhs.coordinate.latitude == rhs.coordinate.latitude &&
-               lhs.coordinate.longitude == rhs.coordinate.longitude
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode(name, forKey: .name)
+        try container.encode(area, forKey: .area)
+        try container.encode(city, forKey: .city)
+        try container.encode(fullAddress, forKey: .fullAddress)
+        try container.encode(coordinate.latitude, forKey: .latitude)
+        try container.encode(coordinate.longitude, forKey: .longitude)
     }
 } 

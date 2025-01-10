@@ -1,5 +1,6 @@
 import SwiftUI
 import MapKit
+import FirebaseFirestore
 
 // MARK: - Form Components
 struct EventInfoHeader: View {
@@ -48,6 +49,7 @@ struct DateTimeSection: View {
 struct PostEventScreen: View {
     @Environment(\.dismiss) var dismiss
     @StateObject private var locationManager = LocationSearchManager()
+    @StateObject private var eventManager = EventManager.shared
     
     @State private var eventTitle = ""
     @State private var selectedDate = Date()
@@ -59,6 +61,9 @@ struct PostEventScreen: View {
     @State private var showLocationResults = false
     @State private var showError = false
     @State private var errorMessage = ""
+    @State private var isPosting = false
+    @State private var showSuccessAlert = false
+    @State private var navigateToHome = false
     
     let accentColor = Color.white
     let gradientColors = [Color.black, Color.black]
@@ -100,41 +105,53 @@ struct PostEventScreen: View {
         return true
     }
     
+    private func resetForm() {
+        eventTitle = ""
+        selectedDate = Date()
+        selectedTime = Date()
+        location = ""
+        selectedCategory = "Community"
+        description = ""
+        locationManager.searchQuery = ""
+    }
+    
     private func createEvent() {
-        if validateForm() {
-            // Format date and time
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "M/dd '@' h a"
-            let combinedDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: selectedTime),
-                                                   minute: Calendar.current.component(.minute, from: selectedTime),
-                                                   second: 0,
-                                                   of: selectedDate) ?? Date()
-            let formattedDate = dateFormatter.string(from: combinedDate)
-            
-            // Create location object
-            let location = Location(
-                name: location.components(separatedBy: ",")[0],
-                area: "Downtown", // Default for now
-                city: "Kalamazoo", // Default for now
+        print("🔘 Create Event button pressed")
+        isPosting = true
+        
+        // Format date string
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "M/dd '@' h a"
+        let formattedDate = dateFormatter.string(from: selectedDate)
+        print("📅 Date formatted: \(formattedDate)")
+        
+        let combinedDate = Calendar.current.date(bySettingHour: Calendar.current.component(.hour, from: selectedTime),
+                                               minute: Calendar.current.component(.minute, from: selectedTime),
+                                               second: 0,
+                                               of: selectedDate) ?? selectedDate
+        
+        let newEvent = Event(
+            name: eventTitle,
+            date: formattedDate,
+            location: Location(
+                name: location,
+                area: "Downtown",  // You might want to make this configurable
+                city: "Kalamazoo",
                 fullAddress: location,
-                latitude: 0,
-                longitude: 0
-            )
-            
-            // Create new event
-            let newEvent = Event(
-                name: eventTitle,
-                date: formattedDate,
-                location: location,
-                category: selectedCategory,
-                description: description
-            )
-            
-            // Here you would typically save the event to your data store
-            // For now we'll just print and dismiss
-            print("Created new event: \(newEvent)")
-            dismiss()
-        }
+                latitude: 42.2917,
+                longitude: -85.5872
+            ),
+            category: selectedCategory,
+            description: description
+        )
+        
+        print("📦 Created event: \(newEvent.name)")
+        eventManager.submitEvent(newEvent)
+        print("✅ Event submitted to manager")
+        
+        showSuccessAlert = true
+        isPosting = false
+        print("=== Post Complete ===")
     }
     
     var body: some View {
@@ -202,6 +219,17 @@ struct PostEventScreen: View {
             } message: {
                 Text(errorMessage)
             }
+            .alert("Success!", isPresented: $showSuccessAlert) {
+                Button("OK") {
+                    resetForm()
+                    navigateToHome = true
+                }
+            } message: {
+                Text("Your event has been successfully posted.")
+            }
+            .navigationDestination(isPresented: $navigateToHome) {
+                ContentView()
+            }
         }
     }
     
@@ -211,8 +239,8 @@ struct PostEventScreen: View {
                 .foregroundColor(.gray)
             TextField("Enter location...", text: $locationManager.searchQuery)
                 .textFieldStyle(ModernTextFieldStyle(icon: "mappin.circle.fill"))
-                .onChange(of: locationManager.searchQuery) { query in
-                    withAnimation { showLocationResults = !query.isEmpty }
+                .onChange(of: locationManager.searchQuery) { _, query in
+                    withAnimation { showLocationResults = !locationManager.searchQuery.isEmpty }
                 }
             
             if showLocationResults && !locationManager.searchResults.isEmpty {
@@ -273,8 +301,10 @@ struct PostEventScreen: View {
     private var toolbarContent: some ToolbarContent {
         Group {
             ToolbarItem(placement: .navigationBarLeading) {
-                Button("Cancel") { dismiss() }
-                    .foregroundColor(.gray)
+                Button(action: { dismiss() }) {
+                    Image(systemName: "arrow.left")
+                        .foregroundColor(.gray)
+                }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button(action: createEvent) {
@@ -286,6 +316,7 @@ struct PostEventScreen: View {
                         .background(.white)
                         .cornerRadius(20)
                 }
+                .disabled(isPosting)
             }
         }
     }
